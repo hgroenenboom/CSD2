@@ -1,3 +1,1 @@
-test
-vim test
-Wat doet ie?
+My GitHub repository for the course CSD2a from the HKU
