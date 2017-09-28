@@ -1,0 +1,11 @@
+import time
+
+n = 0
+
+print("hello world")
+
+while n < 4:
+	time.sleep(1)
+	n = n + 1
+	if n > 2:
+		exit()
