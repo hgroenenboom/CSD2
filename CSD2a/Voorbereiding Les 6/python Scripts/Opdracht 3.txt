@@ -1,0 +1,12 @@
+
+Keuze uit onregelmatige ritmes.
+	amountOfSteps
+recursieve functie:
+	Beatlijsten genereren:
+		- voor 3 samples
+		- lengte van lijst
+		- ritmes + hit probabilities
+	Beat afspelen
+	Vragen voor opslaan:
+		Midi file genereren anders recursie
+	

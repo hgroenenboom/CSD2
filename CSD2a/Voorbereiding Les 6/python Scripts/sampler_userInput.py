@@ -73,8 +73,8 @@ def changeBPM():
 	global bpm
 	print("the default BPM: ", bpm)
 	if changebpm == False:
-		userInput = input('would you like to change the bpm? (yes/no) \n')
-		if userInput == "yes":
+		userInput = input('would you like to change the bpm? (y/n) \n')
+		if userInput == "y":
 			while True:
 				try:
 					bpmInput = int(input('new BPM (number) = '))
@@ -83,7 +83,7 @@ def changeBPM():
 					print("\ninput is not a number, try again")
 			setBPM(bpmInput)
 			return
-		if userInput == "no":
+		if userInput == "n":
 			return
 		else: 
 			print("\n'", userInput, "' is an unknown command, resetting...")
