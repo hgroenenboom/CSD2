@@ -20,9 +20,9 @@ An example project in which three wav files are played after eachother.
 """
 
 #load 3 audioFiles
-sampleHigh = sa.WaveObject.from_wave_file("../audioFiles/Pop.wav")
-sampleMid = sa.WaveObject.from_wave_file("../audioFiles/Laser1.wav")
-sampleLow = sa.WaveObject.from_wave_file("../audioFiles/Dog2.wav")
+sampleHigh = sa.WaveObject.from_wave_file("Pop.wav")
+sampleMid = sa.WaveObject.from_wave_file("Laser1.wav")
+sampleLow = sa.WaveObject.from_wave_file("Dog2.wav")
 
 sampleChoice = False
 
