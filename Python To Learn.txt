@@ -1,0 +1,6 @@
+SOGM ideeen:
+- sample initiatie automisch maken -> searchen door filesystem -> filenames gebruiken als strings -> string bewerking
+- sample list aanmaken met een forloop -> de hoeveelheid beschikbare samples scannen in de map. 
+- samples polyfoon maken
+
+file directories / directory scanning -> pyton documentation
