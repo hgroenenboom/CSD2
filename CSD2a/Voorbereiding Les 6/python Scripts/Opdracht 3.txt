@@ -1,4 +1,4 @@
-
+TODO:
 Keuze uit onregelmatige ritmes.
 	amountOfSteps
 recursieve functie:
@@ -9,4 +9,12 @@ recursieve functie:
 	Beat afspelen
 	Vragen voor opslaan:
 		Midi file genereren anders recursie
-	
+
+Feedback:		
+- hoeveel keer afspelen
+
+Notes:	
+Systeem vs. gebruikers functionaliteiten
+Ordenen op belang
+Classes ervan maken met een main.py
+	Top down - Bottom up

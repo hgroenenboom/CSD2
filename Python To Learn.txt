@@ -4,3 +4,23 @@ SOGM ideeen:
 - samples polyfoon maken
 
 file directories / directory scanning -> pyton documentation
+
+
+notes:
+____________________________________
+
+seqList:
+[0, 1, 4, 7] #step events	()
+[0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0] #on/off arpeggiated events (vast aan een rate, makkelijk in te vullen)
+[0.24, 0.45, 0.64, 0.72, 0.75, 0.94, 1.24] #timed events (alle mogelijke tijden, makkelijk te lezen)
+
+.pop() is voor de linieare events
+	wordt vaak gebruikt in audio om de laatste waardes uit buffers te halen
+	dit vereist dus wel dat de lijst weer aangevuld wordt
+	
+Dit principe is ook handig voor random beats. Zodat de lijsten in een soort queue doorgegeven worden,
+afhankelijk van de .pop(). Dit houdt alles lineair en even lang.
+
+
+Leesbaarheid vs. Efficientie
+event[0], event[1] vs. event.getTime, event.getSample
