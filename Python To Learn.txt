@@ -24,3 +24,6 @@ afhankelijk van de .pop(). Dit houdt alles lineair en even lang.
 
 Leesbaarheid vs. Efficientie
 event[0], event[1] vs. event.getTime, event.getSample
+
+DEBUGGING:
+- timeit library: Hiermee kan je bijhouden hoelang een stuk code duurt om uit te voeren.
