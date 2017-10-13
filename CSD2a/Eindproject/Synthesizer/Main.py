@@ -22,6 +22,7 @@ from tkinter import *    #GUI
 import GUI              #GUI Class - Tkinter
 import Synthesizer         #Synthese classes - Osc, Env, Vca, LP
 import Audio            #PyAudio & Stream - TODO MUST - stream toevoegen
+import Timing
 
 #de full caps dingetjes zijn constanten. Je maakt iets dus full caps als je aan wilt geven dat dit nooit runtime verandert.
 #Audio settings
@@ -68,22 +69,16 @@ def callback(in_data,frame_count,time_info,status): #callback zoals pyAudio deze
     #########################
 
 # PyAudio settings and initializing.
-paHandle = pyaudio.PyAudio()    #init a Handle
 pW = Audio.paAuWrapper(outputDevice)    #init the paAuWrapper
 #print("\nAvailable devices: ")  #device check TODO MUST - dit moet via de command line gebeuren voordat de GUI en audio starten.
 #pW.showDevices(paHandle)
 #print("\n")
 # select a device
-pW.setOutputDevice(paHandle)    #selects output device
-print("Selected device name: ",paHandle.get_device_info_by_index(outputDevice).get('name'))
+pW.setOutputDevice(pW.handle)    #selects output device
+print("Selected device name: ",pW.handle.get_device_info_by_index(outputDevice).get('name'))
 
-# GUI settings and initializing
-root = Tk()     # create a tkinter window
-root.title("Probable Synthesizer")    # set window title
-myGui = GUI.callGUI(master=root)  # initialize the GUI Class
-
-# Start PyAudio stream with some given properties. TODO SHOULD - move de stream naar file 'Audio.py'
-stream = paHandle.open(format=paHandle.get_format_from_width(WIDTH),
+# Start PyAudio stream with some given properties. TODO SHOULD - move de stream naar file 'Audio.py' - Lukt niet
+stream = pW.handle.open(format=pW.handle.get_format_from_width(WIDTH),
                        channels=CHANNELS,
                        rate=AUDIORATE,
                        frames_per_buffer=FRAMESPERBUFFER,
@@ -95,8 +90,21 @@ stream = paHandle.open(format=paHandle.get_format_from_width(WIDTH),
 # Start de stream.
 stream.start_stream()   #TODO Vraag - is dit een thread?
 
+if stream.is_active() == True:
+    # GUI settings and initializing
+    root = Tk()  # create a tkinter window
+    root.title("Probable Synthesizer")  # set window title
+    myGui = GUI.callGUI(master=root)  # initialize the GUI Class
+
+met = Timing.Metronome()
+
 # Start de GUI loop.
 while stream.is_active() == True:
+    met.metronome()
+    if met.playTrigger == True:
+        adsr1.trigger = met.playTrigger
+    #print(met.playTriggerTimes)
+
     myGui.update()     #update de GUI window
     guiUpdateCount += 1    #A counter for guiUpdateSpeed
     if guiUpdateCount >= guiUpdateSpeed & multipleOscillators == 0:  #runs once per 'guiUpdateSpeed'

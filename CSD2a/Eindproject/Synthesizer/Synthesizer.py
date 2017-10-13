@@ -5,6 +5,7 @@ from math import ceil
 import random
 
 import Probability as Pb    #importeer de probability
+import Timing as Tm
 
 # Deze class bevat alle mogelijke oscillators
 class Oscillator():
@@ -121,6 +122,8 @@ class ADSR:
     # adsrSusStage = False    #NIET GEBRUIKT
     # adsrRelStage = False    #NIET GEBRUIKT
 
+    trigger = False
+
     def __init__(self, att=0.01, dec=0.3, sus=0, rel=0.04, audiorate=44100, channels=1, framesPerBuffer=256):
         #ADSR time value worden geinitializeerd
         self.att = att
@@ -141,11 +144,12 @@ class ADSR:
         #loop voor de hoeveelheid frames in een buffer
         for b in range(self.nFrames):
             #initialize of restart de ADSR / arpeggiator
-            if self.adsrCounter > self.arpTime * self.rate or self.adsrCounter == 0:
+            #if self.adsrCounter > self.arpTime * self.rate or self.adsrCounter == 0:
+            if self.trigger == True:
                 self.adsrOutput = 0     #amplitude naar 0
                 self.adsrCounter = 0    #de tijds counter naar 0
                 self.adsrAttStage = True    #de attack stage mag weer aan
-
+                self.trigger = False
                 # self.freq *=   #3/4 fun
 
             #De tijdsteller van de ADSR

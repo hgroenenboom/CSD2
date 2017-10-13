@@ -66,7 +66,7 @@ class Probability():
         return self.pList
 
     #this function is an average filter with 'smoothing' amount of input values. It smoothens the output values
-    def setSmoothValue(self):
+    def smoothenValue(self):
         #delete oldest value from value list
         self.smoothList = np.delete(self.smoothList, self.smoothing - 1)
         #insert new output value in value list
@@ -87,7 +87,7 @@ class Probability():
             self.functionCallCount = 0
             #if smoothing is on, call the 'smoothing' function, else do nothing
             if self.smoothing > 1:
-                self.setSmoothValue()
+                self.smoothenValue()
             else:
                 self.smoothValue = self.outputValue
 
@@ -95,10 +95,12 @@ class Probability():
     def getValue(self):
         return self.outputValue
 
+    def getSmoothValue(self):
+        return self.smoothValue
+
     #get the scaled normal distributed list.
     def getScaledList(self):
         return self.pScaledList
-
 
 #NOTES
 #
