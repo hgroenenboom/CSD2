@@ -28,8 +28,8 @@ class Oscillator():
     ringMod = True #a boolean for switching between AM & Ringmod
 
     # Probabability objecten.
-    prob = Pb.Probability(1, 0.03, exp=True, refreshWait=150)
-    prob2 = Pb.Probability(0.8, 0.03, exp=True, refreshWait=150)
+    probHz = Pb.Probability(1, 0.03, exp=True, refreshWait=150)
+    probAmp = Pb.Probability(0.8, 0.1, exp=True, refreshWait=150)
 
     def __init__(self, frequency=100, phase=0, type=SINE, channels=2, rate=44100, amp=0.5, pulsewidth=0.5, ratio=1.25, modDepth = 1, framesPerBuffer = 256):
         """De initializer van Oscillator"""
@@ -56,11 +56,11 @@ class Oscillator():
         #SINE Synthese:
         if self.type == self.SINE:          #simple sinewave on all channels
             for b in range(self.nFrames):
-                self.prob.setNewValue()    #get new probability value
-                self.prob2.setNewValue()
+                self.probHz.setNewValue()    #get new probability value
+                self.probAmp.setNewValue()
                 for c in range(self.chan):  # fill buffer with the same sin on every channel
-                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.prob2.smoothValue * np.sin(self.phas) * ampMod)
-                    self.phas += 2 * np.pi * (self.freq * self.prob.smoothValue) / self.rate
+                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue * np.sin(self.phas) * ampMod)
+                    self.phas += 2 * np.pi * (self.freq * self.probHz.smoothValue) / self.rate
         #PULSE Synthese:
         elif self.type == self.PULSE:
             for b in range(self.nFrames):

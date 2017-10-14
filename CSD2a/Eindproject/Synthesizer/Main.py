@@ -5,14 +5,6 @@
 #
 # Based on the basic pyaudio program playing a real time mono sine wave by (ME) 2015 Marc Groenewegen
 #
-# TODO MUST
-# - add stream to 'Audio' subfile
-# - think about changing the buffer to [[frame01], [frame02], etc.] with every frame holding 'CHANNELS' channels
-# - understand all GUI widgets and design an GUI
-# TODO COULD
-# - fix filter
-# - implement general smoothing and fades
-# - Multiple oscillators / polyphony
 
 import pyaudio
 import array
@@ -21,7 +13,7 @@ from tkinter import *    #GUI
 
 import GUI              #GUI Class - Tkinter
 import Synthesizer         #Synthese classes - Osc, Env, Vca, LP
-import Audio            #PyAudio & Stream - TODO MUST - stream toevoegen
+import Audio            #PyAudio & Stream - TODO MUST - stream toevoegen - Lukt niet
 import Timing
 
 #de full caps dingetjes zijn constanten. Je maakt iets dus full caps als je aan wilt geven dat dit nooit runtime verandert.
@@ -32,7 +24,7 @@ AUDIORATE = 44100   #audiorate in
 FRAMESPERBUFFER = 1028     #Frames per buffer TODO SHOULD - Test optimal value
 
 callbackCount = 0   #a count mainly used to shut the program down for debugging
-outputDevice=3      #selected outputDevice TODO MUST - GUI of input afhankelijk maken
+outputDevice=3      #selected outputDevice TODO MUST - GUI- of input afhankelijk maken
 multipleOscillators = 0     #selects the multiple oscillator mode
 guiUpdateSpeed = 5000      #updatespeed for the GUI output to the Synth input.    TODO COULD - Test optimal value
 guiUpdateCount = 0    #update count voor de guiUpdateSpeed
@@ -119,11 +111,11 @@ while stream.is_active() == True:
             osc1.modDepth = myGui.sliderModDepth.get() ** 2.0
         if osc1.amp != myGui.sliderAmp.get()**2.0:
             osc1.amp = myGui.sliderAmp.get() ** 2.0
-        if osc1.prob.range != myGui.sliderProbRange.get():      #alle probability aangestuurt met een slider.
-            osc1.prob.range = myGui.sliderProbRange.get()
-            osc1.prob2.range = myGui.sliderProbRange.get() / 10.
-            osc1.prob.autoScaleList()
-            osc1.prob2.autoScaleList()
+        if osc1.probHz.range != myGui.sliderProbRange.get():      #alle probability aangestuurt met een slider.
+            osc1.probHz.range = myGui.sliderProbRange.get()
+            osc1.probAmp.range = myGui.sliderProbRange.get() / 10.
+            osc1.probHz.autoScaleList()
+            osc1.probAmp.autoScaleList()
         if adsr1.att != myGui.sliderAtt.get():
             adsr1.att = myGui.sliderAtt.get()
         if adsr1.dec != myGui.sliderDec.get():

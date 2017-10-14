@@ -44,7 +44,7 @@ class paAuWrapper():
             #print("Selected device number: ", str(self.outputDevice))
 
     def stream(self, callback, inp=False, out=True):
-        # Start PyAudio stream with some given properties. TODO SHOULD - move de stream naar file 'Audio.py'
+        # Start PyAudio stream with some given properties. TODO SHOULD - move de stream naar file 'Audio.py' - werkt niet.
         self.stream = self.handle.open(format=self.get_format_from_width(self.width),
                                        channels=self.channels,
                                        rate=self.audioRate,

@@ -10,7 +10,7 @@ class Metronome():
     currentTime = 0
 
     #these variables are used to create a time varying trigger.
-    chance = Probability.Probability(exp=False, refreshWait=1, range=0.03)
+    chance = Probability.Probability(exp=False, refreshWait=1, range=0.02)
     playTriggerTimes = [0.0, 0.0]  #the time values for the time varying triggers
     pastMetrTimes = [0.0, 0.0]     #saves the pastTime value to be able to compute if the pTrigger should be triggered
     playTrigger = False  #the actual trigger

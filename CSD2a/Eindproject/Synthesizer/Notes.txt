@@ -1,0 +1,58 @@
+MySynthesizer:
+Working name: Probable synthesizer
+
+Eisen:
+	1. 	Duidelijke gebruikers interactie -- GUI moet makkelijk en intuitief zijn.
+
+Important notes:
+	- Denk aan uitbreiding tijdens het programmeren. 
+		- Polyfoon maken
+		- Synthese types 	--Zijn de functies binnen de types te abstraheren.
+		- Midi input
+		- Sequencer input afhankelijk.
+		
+Vragen:
+	- Hoe werkt de callback van PyAudio.
+		waarom kan ik de functie niet verplaatsen en waarom heeft de functie geen parameters nodig bij het gebruik in de stream.
+	- Is de audio stream een thread?
+	- Hebben de if statements bij het vergelijken van de GUI inputs nut voor zwaarheid van het programma
+	- Is het handiger als de buffer zo is opgedeelt:
+		[[frame01],[frame02],etc.] ipv. 
+		[f1ch1, f1ch2, f2ch1, f2ch2]
+		
+Bouwplan:
+	MUST:
+	! inputlijst van de gebruiker voor steps en pitches en amps ([1,2,5,8], [60, 62, 56, 67], [0.5, 0.3, 1.0, 0.1])
+		GUI intergreren, --lijst input, toggle inputs
+		Sequencer bouwen 
+			--pitch naar freq, step naar time
+		! GUI Design. Denk aan eis (1)
+	- output Device input afhankelijk maken.
+		Command line input voor de GUI en streams
+	+ kans op parameters --Moddepth, modratio, (velocity, pitch)
+		de kans wordt los van het tempo en dergelijke bepaald.
+	
+	SHOULD:
+	- Clean afsluiten van alles: GUI, streams & loops.
+	- record audio
+		record function which fills itself with the buffer -- GUI Toggle, import wave
+		!! zie stack exchange links.
+	- Abstraheer de functies binnen de synthese types naar een function.
+		
+ 	COULD:
+	- Fix the filter class in Synthesizer.py
+		Kan deze ook met minder lange lijsten? []*8
+		inputLijst -> outputLijst
+	- maak de synthesizer polyfoon
+	- Test optimal values for variables when finished.
+	+ een Fade class --met isActive
+		- gebruikt als audio click oplossing en als muziekaal dynamisch verloop
+	+ using probabilities to create random metronome differentiations or random velocity
+		+ this requires a trigger functions in the adsr. Or a Trigger class outside of the ADSR. so it can be used 
+		on different ocassions
+		+ the latter requires a metronome and a triggertime which wont effect eachother
+		
+
+Midi to freq
+Midi input
+Sequencer

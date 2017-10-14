@@ -26,7 +26,7 @@ class callGUI(Frame):
         #create all sliders
         self.sliderFreq = self.makeSlider("Main Frequency", 20, 1000, 200)
         self.sliderFreq.pack()
-        self.sliderAmp = self.makeSlider("Amplitude", 0, 1, 0.1, 0.001)
+        self.sliderAmp = self.makeSlider("Amplitude", 0, 1, 0.5, 0.001)
         self.sliderAmp.pack()
         self.sliderRatio = self.makeSlider("Modulator Ratio", 0.001, 10.00, 1.02, 0.001)
         self.sliderRatio.pack()
@@ -42,7 +42,7 @@ class callGUI(Frame):
         self.sliderArpTime.pack()
         self.sliderEnvDamp = self.makeSlider("Damping of the envelope", 1.0, 4.0, 2.0, 0.01)
         self.sliderEnvDamp.pack()
-        self.sliderProbRange = self.makeSlider("'Naturalness'", 0.0, 0.12, 0.03, 0.001)
+        self.sliderProbRange = self.makeSlider("'Naturalness'", 0.0, 0.12, 0.02, 0.001)
         self.sliderProbRange.pack()
 
     # A function which makes it easier to create sliders - TODO MUST - Kijk of het nog voldoet aan mijn behoeftes. Zelfde voor andere widgets
