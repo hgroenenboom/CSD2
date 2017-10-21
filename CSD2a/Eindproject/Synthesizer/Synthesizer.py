@@ -4,108 +4,139 @@ import numpy as np
 from math import ceil
 import random
 
-import Probability as Pb    #importeer de probability
-import Timing as Tm
+import Probability as Pb    #importeer de probability, voor random frequentie en amplitude fluctuaties.
+import Fade #importeer fade om clicks in de adsr weg te halen.
 
 # Deze class bevat alle mogelijke oscillators
 class Oscillator():
     """De Oscillator class bevat meerdere soorten oscillators. Deze worden met een callback aangeroepen."""
-    #TODO MUST - finish sine, only after that start other synthesis techniques
     #TODO MUST - think if theres a way to constrain the synthesis type to lesser code.
     #TODO MUST - Comment synthesis types
 
     #Synthesis types.
-    SINE = 1
-    PULSE = 2
-    FM = 3
-    WNOISE = 4
-    AM = 5
-    "Types: Sine, Pulse, FM, White Noise, AM"
+    SINE = 1    #sine synthesis with fluctuating pitch & amplitude
+    PULSE = 2   #pulse synthesis with pulse width & fluctuating pitch & amplitude (-1 or 1)
+    FM = 3      #FM synthesis with a modulator ratio, modulator amplitude & fluctuating pitch & amplitude
+    WNOISE = 4  #noise synthesis with fluctuating pitch & amplitude (random number generator)
+    AM = 5      #AM synthesis with ringmod and AM. Contains a modulator ratio & fluctuating pitch & amplitude
+    "Types: Sine, Pulse, FM, White Noise, AM"   #all synthesis types summed up
 
     # synthese variabellen: de waardes moeten onthouden worden, daarom moeten ze hier al worden aangemaakt.
-    monoPulseAmp = 0 #value: 1 of -1
-    phaseModulator = 0     #
+    monoPulseAmp = 0 #the amplitude of the pulse oscillator, value: 1 of -1
+    phaseModulator = 0     #phase of the FM & AM modulator
     ringMod = True #a boolean for switching between AM & Ringmod
+    freq = 0    #the used frequency for the synthesis
 
     # Probabability objecten.
     probHz = Pb.Probability(1, 0.03, exp=True, refreshWait=150)
     probAmp = Pb.Probability(0.8, 0.1, exp=True, refreshWait=150)
+    probO = Pb.Probability(1, 0.3, exp=True, refreshWait=150)
 
-    def __init__(self, frequency=100, phase=0, type=SINE, channels=2, rate=44100, amp=0.5, pulsewidth=0.5, ratio=1.25, modDepth = 1, framesPerBuffer = 256):
+    def __init__(self, frequency=100, phase=0, type=SINE, channels=2, rate=44100, amp=0.5, pulsewidth=0.5, ratio=1.25
+                 , modDepth = 1, framesPerBuffer = 256):
         """De initializer van Oscillator"""
 
         #Init values.
-        self.type = type
-        self.freq = frequency
-        self.phas = phase
-        self.plswdth = pulsewidth
-        self.amp = amp
-        self.ratio = ratio
-        self.modDepth = modDepth
+        self.type = type              # synthesis type
+        self.centerFreq = frequency   # the center frequency
+        self.phas = phase             # oscillator phase
+        self.amp = amp                # oscillator amplitude
+        self.ratio = ratio            # FM & AM modulator ratio
+        self.modDepth = modDepth      # FM modulator amplitude
+        self.plswdth = pulsewidth     # pulse oscillator pulsewidth
 
         #Init audio information.
-        self.chan = channels
-        self.rate = rate
-        self.nFrames = framesPerBuffer
+        self.chan = channels                #amount of output channels
+        self.rate = rate                    #audio rate
+        self.nFrames = framesPerBuffer      #amount of frames per callback buffer
 
-        #create output buffer.
+        #create output buffer based on audio information.
         self.outputBuffer = np.zeros(self.chan * self.nFrames, dtype='int16')
 
+    #set a listener for the oscillator to receive frequentie input, in this case the sequencer. (input *  centerfrequentie)
+    def setListener(self, triggerObject):   #input is an object of the sequencer class
+        self.triggerObject = triggerObject  #link the sequener object to a local object. #TODO - is dit wat er gebeurd?
+
+    #generate probability values everytime the function is called.
+    def randomize(self):
+        self.probHz.setNewValue()  # get new probability values
+        self.probAmp.setNewValue()
+        self.probO.setNewValue()
+
+    #Run wordt aangeroepen in een callback en zal een buffer volschrijven met audio informatie.
     def Run(self, ampMod=1):
         """De Run zal voor een audio frame een buffer volschrijven aan de hand van het gekozen synthese type"""
+
+        #frequentie input van de sequencer in de vorm van een ratio.
+        self.freq = self.centerFreq * self.triggerObject.getPitch()
+
         #SINE Synthese:
-        if self.type == self.SINE:          #simple sinewave on all channels
-            for b in range(self.nFrames):
-                self.probHz.setNewValue()    #get new probability value
-                self.probAmp.setNewValue()
-                for c in range(self.chan):  # fill buffer with the same sin on every channel
-                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue * np.sin(self.phas) * ampMod)
-                    self.phas += 2 * np.pi * (self.freq * self.probHz.smoothValue) / self.rate
+        if self.type == self.SINE:
+            for b in range(self.nFrames):   #loop for the amount of frames in the buffer
+                self.randomize()
+                for c in range(self.chan):  #loop for amount of channels per frame
+                    # compute amplitude value and place it in the buffer
+                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue
+                                                               * np.sin(self.phas) * ampMod)
+                # compute new phase value
+                self.phas += 2 * np.pi * (self.freq * self.probHz.smoothValue) / self.rate
         #PULSE Synthese:
         elif self.type == self.PULSE:
             for b in range(self.nFrames):
-                if self.phas > self.plswdth:     #square wave oscillator with pulse width
+                self.randomize()
+                #compute the pulse amplitude corresponding to the phase and the pulse width
+                if self.phas > self.plswdth:
                     self.monoPulseAmp = -1
                 else:
                     self.monoPulseAmp = 1
                 for c in range(self.chan):
-                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.monoPulseAmp * ampMod)
-                self.phas += self.freq / self.rate
-                self.phas = self.phas % 1.0
+                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue * self.monoPulseAmp * ampMod)
+                self.phas += self.freq * self.probHz.smoothValue / self.rate
+                self.phas = self.phas % 1.0     #modulo the phase so it can be used in the above if statements
         #FM Synthese:
         elif self.type == self.FM:  #mono FM Synthesis
+            self.randomize()
             for b in range(self.nFrames):
                 for c in range(self.chan):
-                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * np.sin(self.phas) * ampMod)
-                self.phas += 2 * np.pi * (self.freq / self.rate + np.sin(self.phaseModulator) * self.modDepth)
-                self.phaseModulator += 2 * np.pi * (self.ratio * self.freq) / self.rate
+                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp
+                                * self.probAmp.smoothValue * np.sin(self.phas) * ampMod)
+                self.phas += 2 * np.pi * (self.freq * self.probHz.smoothValue / self.rate + np.sin(self.phaseModulator) * self.modDepth)
+                self.phaseModulator += 2 * np.pi * (self.ratio * self.freq * self.probO.smoothValue) / self.rate
         #White Noise Synthese:
         elif self.type == self.WNOISE:
+            self.randomize()
             for b in range(self.nFrames):
                 for c in range(self.chan):
-                    self.outputBuffer[b * self.chan + c] = int(random.uniform(-32767, 32767) * ampMod)     #Noise
+                    self.outputBuffer[b * self.chan + c] = int(random.uniform(-32767, 32767)
+                                                               * ampMod * self.probAmp.smoothValue)     #Noise
         #AM / Ringmod Synthese:
         elif self.type == self.AM:  #mono AM
             for b in range(self.nFrames):
                 if self.ringMod == True:
                     for c in range(self.chan):
-                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * (np.sin(self.phas) * np.sin(self.phaseModulator)) * ampMod)  # Ring Mod
-                    self.phas += 2 * np.pi * self.freq / self.rate
-                    self.phaseModulator += 2 * np.pi * self.freq * self.ratio / self.rate
+                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue
+                                                                   * (np.sin(self.phas) * np.sin(self.phaseModulator)) * ampMod)  # Ring Mod
+                    self.phas += 2 * np.pi * self.probHz.smoothValue * self.freq / self.rate
+                    self.phaseModulator += 2 * np.pi * self.freq * self.probO.smoothValue * self.ratio / self.rate
                 else:
                     for c in range(self.chan):
-                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * (np.sin(self.phas) * (np.sin(self.phaseModulator) * 0.5 + 1)) * ampMod)  # AM
-                    self.phas += 2 * np.pi * self.freq / self.rate
-                    self.phaseModulator += 2 * np.pi * self.freq * self.ratio / self.rate
-        #Non existing value for self.type
+                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue
+                                                                   * (np.sin(self.phas) * (np.sin(self.phaseModulator) * 0.5 + 1)) * ampMod)  # AM
+                    self.phas += 2 * np.pi * self.probHz.smoothValue* self.freq / self.rate
+                    self.phaseModulator += 2 * np.pi * self.freq * self.probO.smoothValue * self.ratio / self.rate
+        #If non existing value for self.type
         else:
             print("non existing synthesis type")
             for n in range(len(self.outputBuffer)):
                 self.outputBuffer[n] = 0      #Fill buffer with zeros
+        #return the outputBuffer
         return (self.outputBuffer)
 
+
+###########################################################
 # Deze class bevat een ADSR, op dit moment is het een AR.
 class ADSR:
+    fade = Fade.Fade(0, 0, 1, 5) #random init values
 
     #arpeggiator values
     adsrCounter = 0     #a counter for the arpeggiator
@@ -139,24 +170,38 @@ class ADSR:
         #output buffer
         self.outputBuffer = np.zeros(self.chan * self.nFrames, dtype='float16')
 
+    def setListener(self, triggerObject):
+        self.triggerObject = triggerObject
+
     def Run(self):
         """De Run zal voor een audio frame een buffer volschrijven met amplitude waardes uit actieve ADSR fases"""
         #loop voor de hoeveelheid frames in een buffer
+        try:
+            # get trigger value
+            self.trigger = self.triggerObject.getPlay()
+            # set fade value
+            self.fade.setFadeOnce(self.adsrOutput, 0, 10, self.rate / self.nFrames)
+        except:
+            pass
+
         for b in range(self.nFrames):
             #initialize of restart de ADSR / arpeggiator
             #if self.adsrCounter > self.arpTime * self.rate or self.adsrCounter == 0:
             if self.trigger == True:
-                self.adsrOutput = 0     #amplitude naar 0
+                #print("trigger")
+                #amplitude naar 0
                 self.adsrCounter = 0    #de tijds counter naar 0
                 self.adsrAttStage = True    #de attack stage mag weer aan
                 self.trigger = False
-                # self.freq *=   #3/4 fun
+                self.triggerObject.play = 0
 
             #De tijdsteller van de ADSR
             self.adsrCounter += 1
 
             #Attack stage
             if self.adsrAttStage == True:   #alleen als boolean true is.
+                #korte fade naar 0
+                self.fade.runFade()
                 #clippen van att tijd: self.att > 0
                 if self.att <= 0:
                     self.att = 0.001
@@ -184,7 +229,8 @@ class ADSR:
         #The output is the full buffer containing a piece of the ADSR. (or the full ADSR)
         return(self.outputBuffer)
 
-# Deze class fungeert als digitale VCA. VCA kan meerdere lijsten met elkaar verminigvuldigen ( L0[n]*L1[n] )
+###########################################################
+# Deze class fungeert als digitale VCA. VCA kan meerdere lijsten met elkaar verminigvuldigen ( L0[n] * L1[n] )
 class VCA:
     def __init__(self, audiorate=44100, channels=1, framesperbuffer=256):
         #Audio information
@@ -195,6 +241,7 @@ class VCA:
         self.vcaBuffer = np.zeros(self.chan, dtype='int16')
 
     # The actual VCA function. Multiplies multiple lists.
+    # The modulator can be a list of the same bufferlength as the input or a float or integer value.
     def multiply(self, input1, modulator=1):
         """Multiply the incoming buffers. Used for amplitude control."""
         self.vcaBuffer = np.multiply(input1, modulator)
@@ -227,6 +274,7 @@ class VCA:
 #     def getOutput(self):
 #         return self.outbuf
 
+###########################################################
 #Filter is not yet working
 class AverageFilter:  # TODO - filter laten controleren, stereo maken met de channels input, bufferinput gebruiken
     filterOutput = 0

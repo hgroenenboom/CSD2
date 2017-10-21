@@ -27,3 +27,9 @@ event[0], event[1] vs. event.getTime, event.getSample
 
 DEBUGGING:
 - timeit library: Hiermee kan je bijhouden hoelang een stuk code duurt om uit te voeren.
+
+import sys
+sys.exit()
+sys.stdin.
+
+Wat is handiger: '_thread' vs. 'threading'?

@@ -14,14 +14,6 @@ class paAuWrapper():
         self.outputDevice = outputDevice
         print("Een audio wrapper van PyAudio")
 
-        # self.stream = self.handle.open(format=self.handle.get_format_from_width(self.width),
-        #                                channels=self.channels,
-        #                                rate=self.audioRate,
-        #                                frames_per_buffer=self.framesPerBuffer,
-        #                                input=False,  # no input
-        #                                output=True,  # only output
-        #                                output_device_index=self.outputDevice)
-
     def showDevices(self, p):
         """print alle beschikbare in en output devices"""
         info = p.get_host_api_info_by_index(0)

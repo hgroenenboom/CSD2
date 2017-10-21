@@ -1,9 +1,14 @@
 #This class contains a metronome which also has a playtrigger.
 #The play trigger can variate from the metronome trigger to create a naturally timed trigger.
 #
+# TODO - Zoek action listeners, i.p.v. the metronome boolean. Of 
 
 import time
 import Probability
+
+#
+# adsr = ADSR
+# Metronome.addListener(adsr.run)
 
 class Metronome():
     pastTime = 0
@@ -30,8 +35,9 @@ class Metronome():
         #compute time values
         self.timePerBeat = 60.0 / bpm
         self.timePerStep = self.timePerBeat / self.stepsPerBeat
-        print("timePerStep = ", self.timePerStep)
+        #print("timePerStep = ", self.timePerStep)
 
+    #Used to set the class variables once when the metronome function is called
     def setMetronome(self):
         #create first time values
         self.pastTime = time.time() #pastTime is created
@@ -65,6 +71,7 @@ class Metronome():
             self.pastTime = self.currentTime
             self.setPTrigger()  #set the variables for the play trigger
             self.metronomeCount += 1
+            #print(self.metronomeCount)
 
 
         #check for the playTrigger time
@@ -90,6 +97,14 @@ class Metronome():
         # print("\n --set playTriggerTimes = ", self.playTriggerTimes)
         # print(" --set self.pastMetrTime = ", self.pastMetrTimes)
 
+    def setBPM(self, bpm):
+        self.bpm = bpm
+        #compute time values
+        self.timePerBeat = 60.0 / bpm
+        self.timePerStep = self.timePerBeat / self.stepsPerBeat
+
+    def getTrigger(self):
+        return self.playTrigger
 
 # m = Metronome()
 
