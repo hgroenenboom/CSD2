@@ -1,4 +1,4 @@
-# The probable synthesizer
+# The natural synthesizer
 # Made by: Harold Groenenboom
 #
 # General info: Notes are in the bottom of Main. Made to be expandable to polyphony, or midi input
@@ -12,27 +12,27 @@ from tkinter import *    #GUI
 
 # import classes
 import GUI              #GUI Class - Tkinter
-import Synthesizer         #Synthese classes - Osc, Env, Vca, LP
+import Synthesizer         #Synthesis classes - Osc, Env, Vca, LP
 import Audio            #PyAudio & Stream - TODO MUST - stream toevoegen - Lukt niet
 import Sequencer        #Sequencer class - Sequencer
 
-#de full caps dingetjes zijn constanten. Je maakt iets dus full caps als je aan wilt geven dat dit nooit runtime verandert.
-#Audio settings
-WIDTH = 2 # sample size in bytes, 2 = int16 -> max 32676, KAN NIET AAGEPAST WORDEN
+#Capitals mean that these variables are constants and are NOT ment to be changed later on in the code.
+#Audio settings:
+WIDTH = 2 # DONT EDIT: sample size in bytes, 2 = int16 -> max 32676
 CHANNELS = 2 # number of samples in a frame
-AUDIORATE = 44100   #audiorate in
-FRAMESPERBUFFER = 256     #Frames per buffer TODO SHOULD - Test optimal value
+AUDIORATE = 44100   #audiorate in frames per second.
+FRAMESPERBUFFER = 128     #Frames per buffer
 
 # runtime variables
-callbackCount = 0   #a count mainly used to shut the program down for debugging
-outputDevice=3      #selected outputDevice TODO MUST - GUI- of input afhankelijk maken
-multipleOscillators = 0     #selects the multiple oscillator mode  - NOT USED
-guiUpdateSpeed = 200000      #updatespeed for the GUI output to the Synth input.    TODO COULD - Test optimal value
-guiUpdateCount = 0    #update count voor de guiUpdateSpeed
-masterAmp = 1   #master amplitude - NOT USED
-masterOutputBuffer = [] #this array will contain signed ints in order to hold one sample buffer
+callbackCount = 0   #A counter used to shut the program down for debugging
+outputDevice=3      #selected outputDevice, userInput dependent
+guiUpdateSpeed = 2000      #updatespeed for the GUI values to the Synth inputs.    TODO COULD - Test optimal value
+guiUpdateCount = 0    #a counter for the guiUpdateSpeed
+masterOutputBuffer = []     #array off signed ints. This array will always hold one sample buffer when the stream is active
+masterAmp = 1   #NOT ACTIVLY USED - master amplitude
+#multipleOscillators = 0     #NOT USED: selects the multiple oscillator mode
 
-# Create sequencer
+# Create sequencer object
 seq = Sequencer.Sequencer()
 
 # Initialize all Synthesizer objects:
@@ -42,15 +42,18 @@ osc1 = Synthesizer.Oscillator(frequency=300, phase=0, type=Synthesizer.Oscillato
 osc1.setListener(seq)   #make sure the oscillator receives the frequencies from the sequencer
 # ADSR object
 adsr1 = Synthesizer.ADSR(att=0.01, dec=1, sus=0, rel=0, audiorate=AUDIORATE, channels=CHANNELS, framesPerBuffer=FRAMESPERBUFFER)
-adsr1.setListener(seq)  #the metronome which triggers the adsr
-# VCA object (which basicly multiplies lists
+adsr1.setListener(seq)  #makes sure the adsr receives a trigger from the sequencer
+# VCA object, which basicly multiplies lists.
 vca1 = Synthesizer.VCA()
+#filter1 = Synthesizer.AverageFilter(FRAMESPERBUFFER, CHANNELS) - TODO - Fix filter
 print("\nDe Synthesizer objecten zijn geinitializeerd.\n")
 
 # Create GUI
 root = Tk()  # create a tkinter window
-root.title("Probable Synthesizer")  # set window title
-myGui = GUI.callGUI(master=root)  # initialize the GUI Class
+root.title("Natural Synthesizer")  # set window title
+myGui = GUI.callGUI(master=root)  # create a callGUI object
+
+seq.setListener(myGui)  #make sure the sequencer listens to the bpm value of the GUI.
 
 # Create the callback function which is called by pyaudio's stream whenever it needs output-data or has input-data
 # As we are working with 16-bit integers, the range is from -32768 to 32767
@@ -76,23 +79,28 @@ def callback(in_data,frame_count,time_info,status): #callback zoals pyAudio deze
     #########################
 
 # PyAudio settings and initializing.
-pW = Audio.paAuWrapper(outputDevice)    #init the paAuWrapper
+pW = Audio.paAuWrapper(outputDevice)    #create the paAuWrapper object, to communicate with the computers audio drivers.
 
-#select device via console input
+#select the output device via console input
+
 #print available devices
 print("\nAvailable devices: ", pW.handle.get_host_api_info_by_index(0).get('deviceCount'), "\n")  #device check
 pW.showDevices(pW.handle)
-#input loop
+
+#userinput loop, choose the output device:
 while True:
     #userinput
-    userInput = input("\nChoose your audio device: ")
+    userInput = input("\nSelect your output device: ")
     #try if user input is an integer
     try:
         userInput = int(userInput)
         #if userInput is in range of the available devices, change outputDevice to userInput and break the while loop.
-        if userInput > 0 and userInput < pW.handle.get_host_api_info_by_index(0).get('deviceCount'):
-            outputDevice = userInput
-            break
+        if userInput >= 0 and userInput < pW.handle.get_host_api_info_by_index(0).get('deviceCount'):
+            if pW.handle.get_device_info_by_host_api_device_index(0,userInput).get('maxInputChannels')>0:
+                print("Error: Can't use input device as output device - Try again.")
+            else:
+                outputDevice = userInput
+                break
         else:
             print("Error: Integer out of range - Try again.")
     except:
@@ -117,42 +125,42 @@ stream.start_stream()   #TODO Vraag - is dit een thread?
 
 # Start main loop.
 while stream.is_active() == True:
-    # run the sequencer & metronome
+    # run the sequencer with it's metronome
     seq.Run()
-    # update de GUI window
+    # update the GUI window
     myGui.update()
     # count the amount of times the while loop has looped
     guiUpdateCount += 1
-    if guiUpdateCount >= guiUpdateSpeed & multipleOscillators == 0:  #runs once per 'guiUpdateSpeed'
-        #get oscillator values
+    if guiUpdateCount >= guiUpdateSpeed:  #runs once per 'guiUpdateSpeed'
+        #get oscillator related values
         osc1.centerFreq = myGui.sliderFreq.get()
         osc1.ratio = myGui.sliderRatio.get()
         osc1.type = myGui.sliderType.get()
         osc1.modDepth = myGui.sliderModDepth.get() ** 2.0
         osc1.amp = myGui.sliderAmp.get() ** 2.0
 
-        #get probability values from the naturalness slider
-        osc1.probHz.range = myGui.sliderProbRange.get() / 2.
-        osc1.probO.range = myGui.sliderProbRange.get() / 2.
-        osc1.probAmp.range = myGui.sliderProbRange.get() / 5.
+        #get randomness range values from the naturalness slider
+        osc1.randHz.range = myGui.sliderProbRange.get() / 2.
+        osc1.randOther.range = myGui.sliderProbRange.get() / 2.
+        osc1.randAmp.range = myGui.sliderProbRange.get() / 5.
         seq.met.chance.range = myGui.sliderProbRange.get()
-        osc1.probHz.autoScaleList()
-        osc1.probO.autoScaleList()
-        osc1.probAmp.autoScaleList()
+        osc1.randHz.autoScaleList()
+        osc1.randOther.autoScaleList()
+        osc1.randAmp.autoScaleList()
         seq.met.chance.autoScaleList()
 
-        #get ADSR values
+        #get ADSR related values
         adsr1.att = myGui.sliderAtt.get()
         adsr1.dec = myGui.sliderDec.get()
         adsr1.adsrDamp = myGui.sliderEnvDamp.get()
 
-        #get BPM value
+        #get the BPM value
         seq.met.setBPM(myGui.sliderBPM.get())
 
-        #get Sequencer values
-        myGui.playSequence = myGui.updateCheckList(myGui.triggerButtonsValues)
-        seq.playSequence = myGui.playSequence
-        myGui.pitchSequence = myGui.updateCheckList(myGui.pitchSliders)
+        #get the sequencer trigger and pitch list.
+        myGui.triggerSequence = myGui.updateCheckList(myGui.triggerSeqButtonsValues)
+        seq.triggerSequence = myGui.triggerSequence
+        myGui.pitchSequence = myGui.updateCheckList(myGui.pitchSeqSliders)
         seq.pitchSequence = myGui.pitchSequence
 
         #reset GUI update counter

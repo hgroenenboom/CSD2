@@ -4,7 +4,7 @@
 # TODO - Zoek action listeners, i.p.v. the metronome boolean. Of 
 
 import time
-import Probability
+import Randomizer
 
 #
 # adsr = ADSR
@@ -15,7 +15,7 @@ class Metronome():
     currentTime = 0
 
     #these variables are used to create a time varying trigger.
-    chance = Probability.Probability(exp=False, refreshWait=1, range=0.02)
+    chance = Randomizer.NaturalRandomness(exp=False, refreshWait=1, range=0.01)
     playTriggerTimes = [0.0, 0.0]  #the time values for the time varying triggers
     pastMetrTimes = [0.0, 0.0]     #saves the pastTime value to be able to compute if the pTrigger should be triggered
     playTrigger = False  #the actual trigger
@@ -69,10 +69,9 @@ class Metronome():
         if (self.currentTime - self.pastTime > self.timePerStep):
             self.metronomeTrigger = True
             self.pastTime = self.currentTime
+            self.computeBPM()
             self.setPTrigger()  #set the variables for the play trigger
             self.metronomeCount += 1
-            #print(self.metronomeCount)
-
 
         #check for the playTrigger time
         if (self.currentTime - self.pastMetrTimes[0] > self.playTriggerTimes[0]):
@@ -82,8 +81,6 @@ class Metronome():
             #delete old values
             self.pastMetrTimes.pop(0)
             self.playTriggerTimes.pop(0)
-            # print(" --popped playTriggerTimes = ", self.playTriggerTimes)
-            # print(" --popped self.pastMetrTime = ", self.pastMetrTimes)
         return self.metronomeTrigger
 
     def setPTrigger(self):
@@ -91,17 +88,16 @@ class Metronome():
         self.chance.setNewValue()
         #add a new trigger time value to the pTriggerTimes list
         self.playTriggerTimes.extend([self.timePerStep * self.chance.getValue()])
-        #print("chance value = ", self.chance.getValue())
         #save the pastTime value so it can be used for the trigger
         self.pastMetrTimes.extend([self.timePerStep + self.pastTime])
-        # print("\n --set playTriggerTimes = ", self.playTriggerTimes)
-        # print(" --set self.pastMetrTime = ", self.pastMetrTimes)
+
+    def computeBPM(self):
+        #compute time values
+        self.timePerBeat = 60.0 / self.bpm
+        self.timePerStep = self.timePerBeat / self.stepsPerBeat
 
     def setBPM(self, bpm):
         self.bpm = bpm
-        #compute time values
-        self.timePerBeat = 60.0 / bpm
-        self.timePerStep = self.timePerBeat / self.stepsPerBeat
 
     def getTrigger(self):
         return self.playTrigger

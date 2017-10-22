@@ -4,7 +4,7 @@ import numpy as np
 from math import ceil
 import random
 
-import Probability as Pb    #importeer de probability, voor random frequentie en amplitude fluctuaties.
+import Randomizer as Rand    #importeer de probability, voor random frequentie en amplitude fluctuaties.
 import Fade #importeer fade om clicks in de adsr weg te halen.
 
 # Deze class bevat alle mogelijke oscillators
@@ -28,9 +28,9 @@ class Oscillator():
     freq = 0    #the used frequency for the synthesis
 
     # Probabability objecten.
-    probHz = Pb.Probability(1, 0.03, exp=True, refreshWait=150)
-    probAmp = Pb.Probability(0.8, 0.1, exp=True, refreshWait=150)
-    probO = Pb.Probability(1, 0.3, exp=True, refreshWait=150)
+    randHz = Rand.NaturalRandomness(1, 0.03, exp=True, refreshWait=150, smoothing=5)
+    randAmp = Rand.NaturalRandomness(0.8, 0.1, exp=True, refreshWait=150, smoothing=5)
+    randOther = Rand.NaturalRandomness(1, 0.3, exp=True, refreshWait=150, smoothing=5)
 
     def __init__(self, frequency=100, phase=0, type=SINE, channels=2, rate=44100, amp=0.5, pulsewidth=0.5, ratio=1.25
                  , modDepth = 1, framesPerBuffer = 256):
@@ -59,9 +59,9 @@ class Oscillator():
 
     #generate probability values everytime the function is called.
     def randomize(self):
-        self.probHz.setNewValue()  # get new probability values
-        self.probAmp.setNewValue()
-        self.probO.setNewValue()
+        self.randHz.setNewValue()  # get new probability values
+        self.randAmp.setNewValue()
+        self.randOther.setNewValue()
 
     #Run wordt aangeroepen in een callback en zal een buffer volschrijven met audio informatie.
     def Run(self, ampMod=1):
@@ -76,54 +76,55 @@ class Oscillator():
                 self.randomize()
                 for c in range(self.chan):  #loop for amount of channels per frame
                     # compute amplitude value and place it in the buffer
-                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue
+                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.randAmp.smoothValue
                                                                * np.sin(self.phas) * ampMod)
                 # compute new phase value
-                self.phas += 2 * np.pi * (self.freq * self.probHz.smoothValue) / self.rate
+                self.phas += 2 * np.pi * (self.freq * self.randHz.smoothValue) / self.rate
         #PULSE Synthese:
         elif self.type == self.PULSE:
             for b in range(self.nFrames):
                 self.randomize()
                 #compute the pulse amplitude corresponding to the phase and the pulse width
                 if self.phas > self.plswdth:
-                    self.monoPulseAmp = -1
+                    self.monoPulseAmp = -0.35
                 else:
-                    self.monoPulseAmp = 1
+                    self.monoPulseAmp = 0.35
                 for c in range(self.chan):
-                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue * self.monoPulseAmp * ampMod)
-                self.phas += self.freq * self.probHz.smoothValue / self.rate
+                    self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.randAmp.smoothValue * self.monoPulseAmp * ampMod)
+                self.phas += self.freq * self.randHz.smoothValue / self.rate
                 self.phas = self.phas % 1.0     #modulo the phase so it can be used in the above if statements
         #FM Synthese:
         elif self.type == self.FM:  #mono FM Synthesis
-            self.randomize()
             for b in range(self.nFrames):
+                self.randomize()
                 for c in range(self.chan):
                     self.outputBuffer[b * self.chan + c] = int(32767 * self.amp
-                                * self.probAmp.smoothValue * np.sin(self.phas) * ampMod)
-                self.phas += 2 * np.pi * (self.freq * self.probHz.smoothValue / self.rate + np.sin(self.phaseModulator) * self.modDepth)
-                self.phaseModulator += 2 * np.pi * (self.ratio * self.freq * self.probO.smoothValue) / self.rate
+                                                               * self.randAmp.smoothValue * np.sin(self.phas) * ampMod)
+                self.phas += 2 * np.pi * (self.freq * self.randHz.smoothValue / self.rate + np.sin(self.phaseModulator) * self.modDepth)
+                self.phaseModulator += 2 * np.pi * (self.ratio * self.freq * self.randOther.smoothValue) / self.rate
         #White Noise Synthese:
         elif self.type == self.WNOISE:
-            self.randomize()
             for b in range(self.nFrames):
+                self.randomize()
                 for c in range(self.chan):
                     self.outputBuffer[b * self.chan + c] = int(random.uniform(-32767, 32767)
-                                                               * ampMod * self.probAmp.smoothValue)     #Noise
+                                        * ampMod * 0.25 * self.randAmp.smoothValue)     #Noise
         #AM / Ringmod Synthese:
         elif self.type == self.AM:  #mono AM
             for b in range(self.nFrames):
+                self.randomize()
                 if self.ringMod == True:
                     for c in range(self.chan):
-                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue
+                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.randAmp.smoothValue
                                                                    * (np.sin(self.phas) * np.sin(self.phaseModulator)) * ampMod)  # Ring Mod
-                    self.phas += 2 * np.pi * self.probHz.smoothValue * self.freq / self.rate
-                    self.phaseModulator += 2 * np.pi * self.freq * self.probO.smoothValue * self.ratio / self.rate
+                    self.phas += 2 * np.pi * self.randHz.smoothValue * self.freq / self.rate
+                    self.phaseModulator += 2 * np.pi * self.freq * self.randOther.smoothValue * self.ratio / self.rate
                 else:
                     for c in range(self.chan):
-                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.probAmp.smoothValue
+                        self.outputBuffer[b * self.chan + c] = int(32767 * self.amp * self.randAmp.smoothValue
                                                                    * (np.sin(self.phas) * (np.sin(self.phaseModulator) * 0.5 + 1)) * ampMod)  # AM
-                    self.phas += 2 * np.pi * self.probHz.smoothValue* self.freq / self.rate
-                    self.phaseModulator += 2 * np.pi * self.freq * self.probO.smoothValue * self.ratio / self.rate
+                    self.phas += 2 * np.pi * self.randHz.smoothValue * self.freq / self.rate
+                    self.phaseModulator += 2 * np.pi * self.freq * self.randOther.smoothValue * self.ratio / self.rate
         #If non existing value for self.type
         else:
             print("non existing synthesis type")
@@ -178,7 +179,7 @@ class ADSR:
         #loop voor de hoeveelheid frames in een buffer
         try:
             # get trigger value
-            self.trigger = self.triggerObject.getPlay()
+            self.trigger = self.triggerObject.getTrigger()
             # set fade value
             self.fade.setFadeOnce(self.adsrOutput, 0, 10, self.rate / self.nFrames)
         except:
@@ -193,7 +194,7 @@ class ADSR:
                 self.adsrCounter = 0    #de tijds counter naar 0
                 self.adsrAttStage = True    #de attack stage mag weer aan
                 self.trigger = False
-                self.triggerObject.play = 0
+                self.triggerObject.trigger = 0
 
             #De tijdsteller van de ADSR
             self.adsrCounter += 1
@@ -208,7 +209,7 @@ class ADSR:
                 #berekent met hoeveel de output moet optellen om 1 te worden na de gekozen attack tijd.
                 self.adsrOutput += 1 / int(ceil(self.att * self.rate))
                 #einde van attack stage
-                if self.adsrOutput > 0.99:
+                if self.adsrOutput >= 0.99:
                     self.adsrAttStage = False
                     self.adsrDecStage = True
             #Decay stage: same as attack stage
@@ -216,12 +217,15 @@ class ADSR:
                 if self.dec <= 0:
                     self.dec = 0.001
                 self.adsrOutput += -1 / int(ceil(self.dec * self.rate))
-                if self.adsrOutput < 0.01:
+                if self.adsrOutput <= 0:
                     self.adsrDecStage = False
             #sustain en release niet nodig in een arpeggiator
 
             #Exponential scaling of the adsr output, this feels like damping of the envelope.
-            self.adsrOutputScaled = self.adsrOutput ** self.adsrDamp
+            try:
+                self.adsrOutputScaled = float(self.adsrOutput ** self.adsrDamp)
+            except:
+                self.adsrOutputScaled = 0
 
             #filling a frame based on the amount of channels per frame
             for c in range(self.chan):
@@ -279,24 +283,17 @@ class VCA:
 class AverageFilter:  # TODO - filter laten controleren, stereo maken met de channels input, bufferinput gebruiken
     filterOutput = 0
 
-    def __init__(self, lowpassamount=1, highpassamount=0, channels=1):
-        self.lowpassAmount = lowpassamount
-        self.highpassAmount = highpassamount
+    def __init__(self, framesPerBuffer=256, channels=1):
+        self.nFrames = framesPerBuffer
         self.chan = channels
 
-    def Run(self, inputbuffer, index):
-        if self.lowpassAmount > 0:      #0 = bypass. Met de waarde filterLowpass kan de filter intensiteit bepaald worden
-            filterOutput = 0    #initializeer output met 0
-            for p in range(self.lowpassAmount):     #loop "lowpassAmount" keer de lowPass af
-                filterOutput += inputbuffer[index - p]  #de specifieke inputbuffer waardes worden bij filteroutput opgeteld
-                filterOutput /= self.lowpassAmount      #de filteroutput wordt gedeeld door "lowpassAmount" (de hoeveelheid samples uit de buffer
-            inputbuffer[index - self.lowpassAmount] = int(filterOutput)    #hier wordt van de !oudste! bufferwaarde de waarde aangepast zodat de nieuwere waardes nog voor de volgende filterwaardes gebruikt kunnen worden
-        # if self.highpassAmount > 0:
-        #     filterOutput = 0
-        #     for p in range(self.highpassAmount):
-        #         filterOutput += inputbuffer[index - p]
-        #         filterOutput /= self.highpassAmount
-        #     inputbuffer[index - self.highpassAmount] = int(filterOutput)
+    def Run(self, inputbuffer):
+        for b in range(self.nFrames):   #loop for the amount of frames in the buffer
+            filterOutput = inputbuffer[b*self.chan - self.chan] +  inputbuffer[b*self.chan]  #de specifieke inputbuffer waardes worden bij filteroutput opgeteld
+            filterOutput *= 0.5      #de filteroutput wordt gedeeld door "lowpassAmount" (de hoeveelheid samples uit de buffer
+            for c in range(self.chan):  #loop for amount of channels per frame
+                filterOutput  = filterOutput.astype('int16')
+                inputbuffer[b * self.chan - self.chan + c] = filterOutput    #hier wordt van de !oudste! bufferwaarde de waarde aangepast zodat de nieuwere waardes nog voor de volgende filterwaardes gebruikt kunnen worden
         return inputbuffer
 
 #NOTES
