@@ -170,7 +170,6 @@ class callGUI(Frame):
         #Generate pitch values and add them to the specified savedSequence.
         for n in range(8, 16):
             self.savedSequences[index][n] = self.pitches[random.randint(0,6)]   #get a random pitch from the generated tonal scale.
-        print(self.savedSequences[index])
 
     #use the selected savedSequence in the sequencer. Used to toggle created sequences in the GUI.
     def useSequence(self, index=0):

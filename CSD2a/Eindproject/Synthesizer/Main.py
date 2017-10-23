@@ -12,7 +12,7 @@ from tkinter import *    #GUI
 
 # import classes
 import GUI              #GUI Class - Tkinter
-import Synthesizer         #Synthesis classes - Osc, Env, Vca, LP
+import Modules         #Synthesis classes - Osc, Env, Vca, LP
 import Audio            #PyAudio & Stream - TODO MUST - stream toevoegen - Lukt niet
 import Sequencer        #Sequencer class - Sequencer
 
@@ -37,14 +37,14 @@ seq = Sequencer.Sequencer()
 
 # Initialize all Synthesizer objects:
 # Oscillator object
-osc1 = Synthesizer.Oscillator(frequency=300, phase=0, type=Synthesizer.Oscillator.SINE, amp=0.5, pulsewidth=0.5, ratio=1.005
-                              , modDepth=0.015, framesPerBuffer=FRAMESPERBUFFER, channels=CHANNELS, rate=AUDIORATE)
+osc1 = Modules.Oscillator(frequency=300, phase=0, type=Modules.Oscillator.SINE, amp=0.5, pulsewidth=0.5, ratio=1.005
+                          , modDepth=0.015, framesPerBuffer=FRAMESPERBUFFER, channels=CHANNELS, rate=AUDIORATE)
 osc1.setListener(seq)   #make sure the oscillator receives the frequencies from the sequencer
 # ADSR object
-adsr1 = Synthesizer.ADSR(att=0.01, dec=1, sus=0, rel=0, audiorate=AUDIORATE, channels=CHANNELS, framesPerBuffer=FRAMESPERBUFFER)
+adsr1 = Modules.ADSR(att=0.01, dec=1, sus=0, rel=0, audiorate=AUDIORATE, channels=CHANNELS, framesPerBuffer=FRAMESPERBUFFER)
 adsr1.setListener(seq)  #makes sure the adsr receives a trigger from the sequencer
 # VCA object, which basicly multiplies lists.
-vca1 = Synthesizer.VCA()
+vca1 = Modules.VCA()
 #filter1 = Synthesizer.AverageFilter(FRAMESPERBUFFER, CHANNELS) - TODO - Fix filter
 print("\nDe Synthesizer objecten zijn geinitializeerd.\n")
 
@@ -166,14 +166,14 @@ while stream.is_active() == True:
         #reset GUI update counter
         guiUpdateCount = 0  #reset counter
 
-# TODO SHOULD - Clean afsluiten van alle streams, threads en whiles
+# TODO SHOULD - clean shutdown and startup of all streams, threads en while loops
 
 #NOTES:
 # ARRAYS:
 # outbuf = array.array('h', [0]) * FRAMESPERBUFFER * CHANNELS # array of signed ints
 # outbuftest = np.zeros(FRAMESPERBUFFER * CHANNELS, np.dtype('int16'))
 #
-# MULTIPLE OSCILLATORS:  #TODO  - Multiple oscillators is heel erg outdated
+# MULTIPLE OSCILLATORS:  #TODO  - Multiple oscillators is very outdated
 # if multipleOscillators == 1:
 #     oscA = [Synthesizer.Oscillator((i + 1) * 100, 0, Synthesizer.Oscillator.SINE, CHANNELS, AUDIORATE, 0.5 / (i + 1), i * 0.1 + 0.2, 1, 1, FRAMESPERBUFFER) for i in range(3)]
     # if multipleOscillators == 1:
