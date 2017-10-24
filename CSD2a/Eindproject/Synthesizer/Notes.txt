@@ -2,7 +2,7 @@ MySynthesizer:
 Working name: Probable synthesizer
 
 Project status:
-Alle files zijn gecomment. De must, could & shoulds zijn duidelijk beschreven. De belangrijkste elementen voor mij nu zijn:	De sequencer & de GUI. Daarna kan ik het beste focussen op de eisen. Vervolgens met extra tijd kan ik me ook aan de should en coulds wagen. Maar het project is al volledig zonder de coulds.
+Alle files zijn gecomment. De must, could & shoulds zijn duidelijk beschreven. Alles werkt nu goed. Ik me in vervolg het beste focussen op de eisen van het project. En vervolgens met extra tijd aan de should en coulds wagen.
 
 Eisen:
 	1. 	Duidelijke gebruikers interactie -- GUI moet makkelijk en intuitief zijn.
@@ -36,7 +36,7 @@ Bouwplan:
 	+ Sequencer.
 		 + Midi to freq
 		 + Buttons in de gui.
-	- output Device input afhankelijk maken.
+	+ output Device input afhankelijk maken.
 		Command line input voor de GUI en streams
 	+ kans op parameters --Moddepth, modratio, (velocity, pitch)
 		de kans wordt los van het tempo en dergelijke bepaald.
