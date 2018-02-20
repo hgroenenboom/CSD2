@@ -1,0 +1,18 @@
+Leerdoelen:
+	- Interactie met gebruiker d.m.v. sensoren
+		- Types sensoren
+	- Leren programmeren van effecten zoals:
+		- Filters
+		- Compressie / Transient design
+		- Distortion
+
+Volgorde switchabel effect rack:
+	- Leren van de effecten
+		MUST:
+		- Filter met res en freq
+		COULD:
+		- Andere effecten
+	- Alle effecten als losse class / module
+	- Met pointers switchen, en zo gewoon achtereenvolgens toepassen.
+		- Oplossing verzinnen voor de waarschijnlijke clicks
+	- Realtime

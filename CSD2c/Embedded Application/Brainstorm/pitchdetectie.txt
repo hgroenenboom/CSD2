@@ -1,0 +1,4 @@
+pitchdetectie naar sync oscillation
+pitchdetectie naar effect
+
+Bijvoorbeeld stem als input en dan hierover een sync oscillator plaatsten om de stem waveform te herstarten.

@@ -1,0 +1,36 @@
+Synthesizer:
+
+Eisen:
+		
+	- TripleOscillator module met 3 oscillator met verschillende waveforms.
+		uitbreidbaar en aanpasbaar! naar:
+			Polyphonic multivoicedsynth (<- multivoicedsynth) <- multivoice oscillator <- oscillator
+			(elke voice anders?)
+			- polyOsc met morphing polyoscillators.
+				- pitch, pan en detune shifts
+				- benodigdheden: LFO
+			aanpasbare inhoud oscillator, d.m.v. derived classes.
+	- filter met q en cutoff
+		uitbreidbaar!
+	
+	(- midi input)
+
+	(- oscillator sync)
+	
+	Ideeen:
+	- Drawable wavetables (met aplied anti-aliasing)
+		- met multislider
+		- met touchscreen
+		- met menselijke beweging?
+			- proximity sensor
+			
+	(- envelopes)
+	(- Distortion)
+- polyOsc met morphing polyoscillators.
+				- pitch, pan en detune shifts
+				- benodigdheden: LFO
+			
+			
+
+			
+

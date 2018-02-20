@@ -1,0 +1,21 @@
+Live granulator:
+
+Creeert een amplitude filter i.p.v. echt op te knippen.
+Creeert meerdere verschillende channels uit de input om daar net andere granulation op uit te voeren.
+	
+Opties:
+- Vloeit de grains in elkaar over. i.e. delayed elke grain.
+- Creeert complexe chopped up versies van de input. 
+		Met eventueel elke versie een eigen pitchcontrol (akkoorden)
+
+Wat komt erbij kijken:
+- Live pitchshifting
+- Filter envelopes + filter
+- Amplitude envelopes
+- Randomness van alle parameters
+- Lenght van de envelopes
+
+Werken met:
+- master_time
+- grain_length
+- offset_from_master_time / time_offset
