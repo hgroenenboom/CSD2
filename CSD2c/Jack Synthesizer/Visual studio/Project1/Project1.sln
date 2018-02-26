@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project1", "Project1.vcxproj", "{1A2305AC-A15E-4703-836C-286B113F0CEA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2B0F2C90-AF94-44EC-B400-A37311E33117}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\jack_module.cpp = ..\..\jack_module.cpp
+		..\..\jack_module.h = ..\..\jack_module.h
+		..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Jack\lib\libjack.lib = ..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Jack\lib\libjack.lib
+		..\..\main.cpp = ..\..\main.cpp
+		..\..\oscillator.cpp = ..\..\oscillator.cpp
+		..\..\oscillator.h = ..\..\oscillator.h
+		..\..\synth.cpp = ..\..\synth.cpp
+		..\..\synth.h = ..\..\synth.h
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Debug|x64.ActiveCfg = Debug|x64
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Debug|x64.Build.0 = Debug|x64
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Debug|x86.ActiveCfg = Debug|Win32
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Debug|x86.Build.0 = Debug|Win32
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Release|x64.ActiveCfg = Release|x64
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Release|x64.Build.0 = Release|x64
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Release|x86.ActiveCfg = Release|Win32
+		{1A2305AC-A15E-4703-836C-286B113F0CEA}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AB6F0F59-7DC4-4B99-B1AC-D113D4156372}
+	EndGlobalSection
+EndGlobal

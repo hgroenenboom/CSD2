@@ -1,1 +1,0 @@
-jackd -R -S -d portaudio -d "ASIO::ASIO4ALL v2"
