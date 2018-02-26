@@ -101,7 +101,7 @@ int main(int argc,char **argv)
                 }
 
                 if(choice >= 0 && choice <= wt.amountOfWaves) {
-                    synth.setWaveType(choice);
+                    polySynth.setWaveType(choice);
                 }
 
                 optionMenu();
@@ -121,7 +121,7 @@ int main(int argc,char **argv)
 					int index = polySynth.polyMidi.findIndexForMidiPitch(midiP);
 					cout << "IndexForMidiPitch: " << index << endl;
 					if(index == -1) {
-						polySynth.newNote(60, midiP);
+						polySynth.newNote(127, midiP);
 					} else {
 						polySynth.newNote(0, midiP);
 					}

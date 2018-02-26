@@ -11,6 +11,8 @@ public:
     Synth(WaveTable* wt);
 
     void process(float* buffer, int buffersize);
+	// Process add is dangerous and should only be used if Synth is part of a polySynth
+	void processAdd(float* buffer, int buffersize);
 	
     void setSamplerate(int sr);
 	void setAmplitude(float amp);
@@ -38,11 +40,19 @@ public:
 			synths[i] = new Synth(wt);
 			synths[i]->setAmplitude(0.0f);
 		}
+		
+		normAmp = 1.0f / (float)numVoices;
 	}
 	
 	void process(float* buffer, int buffersize) {
+		for(int i = 0; i < buffersize; i++) {
+			buffer[i] = 0.0f;
+		}
 		for(int i = 0; i < numVoices; i++) {
-			synths[i]->process(buffer, buffersize);
+			synths[i]->processAdd(buffer, buffersize);
+		}
+		for(int i = 0; i < buffersize; i++) {
+			buffer[i] *= normAmp;
 		}
 	}
 	
@@ -51,7 +61,14 @@ public:
 		synths[note]->setMidiNote(vel, pitch);
 	}
 	
+	void setWaveType(int choice) {
+		for(int i = 0; i < numVoices; i++) {
+			synths[i]->setWaveType(choice);
+		}
+	}
+	
 	int numVoices = 8;
+	float normAmp = 1.0f;
 	Synth** synths;
 	WaveTable* wt;
 	

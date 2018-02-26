@@ -47,6 +47,7 @@ public:
 	MVOscillator(int samplerate, WaveTable* wavetable, int numvoices);
 	
 	void nextAudioBlock(float* buffer, int buffersize);
+	void addNextAudioBlock(float* buffer, int buffersize);
 	void createDetuneArray(float detune);
 	
 	void setMidiNote(float midi);
@@ -69,6 +70,10 @@ public:
 	float midi = 48;
 	float amplitude = 1.0f;
 	int waveType = 0;
+	
+	// voor de addProcess
+	float storage[4096];		// NIET HIER GEHEUGEN AANMAKEN! 
 };
+
 
 #endif

@@ -23,6 +23,7 @@ public:
 		notes = new MidiNote*[numVoices];
 		for(int i = 0; i < numVoices; i++) {
 			notes[i] = new MidiNote();
+			activeNotes[i] = 0;
 		}
 	}
 	
@@ -35,11 +36,13 @@ public:
 	
 	void insertNewActiveNote(int index){
 		int temp[numVoices];
-		memcpy(temp, activeNotes, numVoices * sizeof(int));
+		for (int i = 0; i < numVoices; i++) {
+			temp[i] = activeNotes[i];
+		}
 		for (int i = 0; i < numVoices; i++) {
 			activeNotes[i] = temp[(i + 1) % numVoices];
 		}
-		activeNotes[numVoices] = index;
+		activeNotes[numVoices - 1] = index;
 	}
 
 	int insertNewNote(int vel, int pitch) {
@@ -77,9 +80,10 @@ public:
 				notes[oldestNote]->vel = 0;
 				notes[oldestNote]->pitch = pitch;
 				notes[oldestNote]->vel = vel;
+				insertNewActiveNote(selectedNote);
 			}
 		}
-		
+		cout << "selected note: " << selectedNote << endl;
 		return selectedNote;
 	}
 	
@@ -97,6 +101,11 @@ public:
 		for(int i = 0; i < numVoices; i++) {
 			cout << i << " : vel = " << notes[i]->vel << ", pitch = " << notes[i]->pitch << endl;
 		}
+		cout << "activeNotesArray: ";
+		for(int i = 0; i < numVoices; i++) {
+			cout << activeNotes[i] << ". ";
+		}
+		cout << endl;
 	}
 	
 	int numVoices = 8;

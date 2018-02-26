@@ -72,6 +72,23 @@ void MVOscillator::nextAudioBlock(float* buffer, int buffersize) {
 	}
 }
 
+void MVOscillator::addNextAudioBlock(float* buffer, int buffersize) {  
+
+	for(int i = 0; i < buffersize; i++) {
+		storage[i] = 0.0f;
+	}
+	for(int i = 0; i < numVoices; i++) {
+		oscArray[i]->addToNextAudioBlock(storage, buffersize);
+	}
+	for(int i = 0; i < buffersize; i++) {
+		storage[i] *= normAmp;
+		storage[i] *= amplitude;
+		buffer[i] += storage[i];
+	}
+	
+}
+	// delete(temp);
+
 void MVOscillator::createDetuneArray(float detune) {
 	for(int i = 0; i < numVoices; i++) {
 		float randomNum = ((rand() % 1000) * 0.001f - 0.5f) * (0.5f * detune);

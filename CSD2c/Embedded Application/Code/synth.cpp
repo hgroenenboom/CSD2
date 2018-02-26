@@ -12,6 +12,10 @@ void Synth::process(float* buffer, int buffersize) {
 	mvOscillator.nextAudioBlock(buffer,buffersize);
 }
 
+void Synth::processAdd(float* buffer, int buffersize) {
+	mvOscillator.addNextAudioBlock(buffer,buffersize);
+}
+
 void Synth::setSamplerate(int sr) {
 	mvOscillator.setSampleRate(sr);
 }
@@ -37,6 +41,7 @@ void Synth::setMidiNote(float vel, float pitch) {
 	} else {
 		tempVel = (vel / 127.0f) * 0.5f + 0.5f;
 	}
+	cout << "velocity: " << tempVel << endl;
 	setAmplitude(tempVel);
 }
 	
