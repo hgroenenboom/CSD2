@@ -1,0 +1,65 @@
+﻿  Instrument.cpp
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(6): error C2653: 'Instrument': is not a class or namespace name
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(6): error C2039: 'string': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(6): error C2065: 'string': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(6): error C2146: syntax error: missing ')' before identifier 'newString'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(7): error C2143: syntax error: missing ';' before '{'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(7): error C2447: '{': missing function header (old-style formal list?)
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(11): error C2653: 'Instrument': is not a class or namespace name
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(13): error C2039: 'cout': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(13): error C2065: 'cout': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(13): error C2065: 'sound': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(16): error C2653: 'Instrument': is not a class or namespace name
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(18): error C2039: 'cout': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(18): error C2065: 'cout': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(18): error C2065: 'sound': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(18): error C2228: left of '.length' must have class/struct/union
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(18): note: type is 'unknown-type'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(21): error C2653: 'Instrument': is not a class or namespace name
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(24): error C2653: 'Instrument': is not a class or namespace name
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C2039: 'this_thread': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C3083: 'this_thread': the symbol to the left of a '::' must be a type
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C2039: 'sleep_for': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C2039: 'chrono': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C3083: 'chrono': the symbol to the left of a '::' must be a type
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C2039: 'seconds': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C3861: 'seconds': identifier not found
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(25): error C3861: 'sleep_for': identifier not found
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(29): error C2653: 'Instrument': is not a class or namespace name
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(31): error C2039: 'rand': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(31): error C3861: 'rand': identifier not found
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(32): error C2039: 'rand': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(32): error C3861: 'rand': identifier not found
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(37): error C2653: 'Instrument': is not a class or namespace name
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(37): error C2039: 'string': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(37): error C2065: 'string': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(37): error C2146: syntax error: missing ')' before identifier 'inputArray'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(38): error C2143: syntax error: missing ';' before '{'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\instrument.cpp(38): error C2447: '{': missing function header (old-style formal list?)
+  ConsoleApplication1.cpp
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(7): error C2065: 'Instrument': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(7): error C2146: syntax error: missing ';' before identifier 'instrument'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(7): error C3861: 'instrument': identifier not found
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(8): error C2039: 'cout': is not a member of 'std'
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\predefined c++ types (compiler internal)(208): note: see declaration of 'std'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(8): error C2065: 'cout': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(10): error C2065: 'instrument': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(10): error C2228: left of '.makeSound' must have class/struct/union
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(10): note: type is 'unknown-type'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(11): error C2065: 'instrument': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(11): error C2228: left of '.playTone' must have class/struct/union
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(11): note: type is 'unknown-type'
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(12): error C2065: 'instrument': undeclared identifier
+c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(12): error C2228: left of '.makeMultipleSounds' must have class/struct/union
+  c:\users\harold\documents\dropbox\studie\jaar 3\csd jaar 2\b c++\opdracht_2_windows\opdracht_2\consoleapplication1\consoleapplication1\consoleapplication1.cpp(12): note: type is 'unknown-type'
+  Generating Code...
