@@ -29,45 +29,19 @@ public:
 
 class PolySynth{
 public:
-	PolySynth(WaveTable* wt, int numvoices = 8)
-		: wt(wt), 	
-		  numVoices(numvoices),
-		  polyMidi(numvoices)
-	{
-		
-		synths = new Synth*[numvoices];
-		for(int i = 0; i < numVoices; i++) {
-			synths[i] = new Synth(wt);
-			synths[i]->setAmplitude(0.0f);
-		}
-		
-		normAmp = 1.0f / (float)numVoices;
-	}
+	PolySynth(WaveTable* wt, int numSynths=8);
+	~PolySynth();
 	
-	void process(float* buffer, int buffersize) {
-		for(int i = 0; i < buffersize; i++) {
-			buffer[i] = 0.0f;
-		}
-		for(int i = 0; i < numVoices; i++) {
-			synths[i]->processAdd(buffer, buffersize);
-		}
-		for(int i = 0; i < buffersize; i++) {
-			buffer[i] *= normAmp;
-		}
-	}
+	// Zero fill the buffer and add the buffer values for all internal synths to the buffer.
+	void process(float* buffer, int buffersize);
 	
-	void newNote(int vel, int pitch) {
-		int note = polyMidi.newNote(vel, pitch);
-		synths[note]->setMidiNote(vel, pitch);
-	}
+	// Insert a new midi note into the polyMidi object 
+	// and route the midi to the corresponding synth object.
+	void newNote(int vel, int pitch);
+	// Set the wave type of all synth objects.
+	void setWaveType(int choice);
 	
-	void setWaveType(int choice) {
-		for(int i = 0; i < numVoices; i++) {
-			synths[i]->setWaveType(choice);
-		}
-	}
-	
-	int numVoices = 8;
+	int numSynths = 8;
 	float normAmp = 1.0f;
 	Synth** synths;
 	WaveTable* wt;

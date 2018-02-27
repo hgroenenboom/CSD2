@@ -12,6 +12,7 @@ class Oscillator{
 public:
     // virtual constructor met de samplerate?
 	Oscillator(int samplerate, WaveTable* wavetable);
+	~Oscillator();
 	
     void nextAudioBlock(float* buffer, int buffersize);
 	void addToNextAudioBlock(float* buffer, int buffersize);
@@ -28,7 +29,7 @@ public:
 
 	
 private:
-	char* waveName;
+	// char* waveName;  // not used
 	WaveTable* wavetable;
 	float* currentWave = nullptr;
 	
@@ -45,6 +46,7 @@ private:
 class MVOscillator{
 public:
 	MVOscillator(int samplerate, WaveTable* wavetable, int numvoices);
+	~MVOscillator();
 	
 	void nextAudioBlock(float* buffer, int buffersize);
 	void addNextAudioBlock(float* buffer, int buffersize);
@@ -71,8 +73,9 @@ public:
 	float amplitude = 1.0f;
 	int waveType = 0;
 	
-	// voor de addProcess
-	float storage[4096];		// NIET HIER GEHEUGEN AANMAKEN! 
+	// Used for storing the calculated process data:
+	// This has to happen because of the needed operations in addNextAudioBlock.
+	float storage[4096];
 };
 
 

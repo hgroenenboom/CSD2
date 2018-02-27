@@ -1,6 +1,7 @@
 #ifndef _POLYMIDI_H_
 #define _POLYMIDI_H_
 
+#include <iostream>
 #include <cstring>
 
 using namespace std;
@@ -16,101 +17,23 @@ public:
 class PolyMidi
 {
 public:
-	PolyMidi(int num_voices=8) 
-		: numVoices(num_voices) 
-	{
-		activeNotes = new int[numVoices];
-		notes = new MidiNote*[numVoices];
-		for(int i = 0; i < numVoices; i++) {
-			notes[i] = new MidiNote();
-			activeNotes[i] = 0;
-		}
-	}
+	PolyMidi(int num_voices=8);
+	~PolyMidi();
 	
-	int newNote(int vel, int pitch) {
-		int temp = insertNewNote(vel, pitch);
-		cout << "newnote = " << temp << ", with vel " << vel << " and pitch " << pitch << endl;
-		printAllNotes();
-		return temp;
-	}
-	
-	void insertNewActiveNote(int index){
-		int temp[numVoices];
-		for (int i = 0; i < numVoices; i++) {
-			temp[i] = activeNotes[i];
-		}
-		for (int i = 0; i < numVoices; i++) {
-			activeNotes[i] = temp[(i + 1) % numVoices];
-		}
-		activeNotes[numVoices - 1] = index;
-	}
-
-	int insertNewNote(int vel, int pitch) {
-		int selectedNote = 0;
-		// turning off a note, when velocity is 0
-		if(vel == 0) {
-			for(int i = 0; i < numVoices; i++) {
-				if(notes[i]->pitch == pitch) {
-					notes[i]->vel = 0;
-					notes[i]->busy = false;
-					selectedNote = i;
-				}
-			}
-		}
-		// if velocity is greater then zero, try to find a new free note, if there is no free note,
-		// overwrite the oldest selected note.
-		else if(vel > 0) {
-			bool foundFreeNote = false;
-			int count = 0;
-			while(count < 8 && foundFreeNote != true) {
-				if(notes[count]->busy != true) {
-					notes[count]->pitch = pitch;
-					notes[count]->vel = vel;
-					notes[count]->busy = true;
-					insertNewActiveNote(count);
-					foundFreeNote = true;
-					selectedNote = count;
-					break;
-				}
-				count++;
-			}
-			if (!foundFreeNote) {
-				int oldestNote = activeNotes[0];
-				selectedNote = oldestNote;
-				notes[oldestNote]->vel = 0;
-				notes[oldestNote]->pitch = pitch;
-				notes[oldestNote]->vel = vel;
-				insertNewActiveNote(selectedNote);
-			}
-		}
-		cout << "selected note: " << selectedNote << endl;
-		return selectedNote;
-	}
-	
-	int findIndexForMidiPitch(int pitch) {
-		for(int i = 0; i < numVoices; i++) {
-			if(notes[i]->pitch == pitch) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	void printAllNotes() {
-		cout << "Notes: \n";
-		for(int i = 0; i < numVoices; i++) {
-			cout << i << " : vel = " << notes[i]->vel << ", pitch = " << notes[i]->pitch << endl;
-		}
-		cout << "activeNotesArray: ";
-		for(int i = 0; i < numVoices; i++) {
-			cout << activeNotes[i] << ". ";
-		}
-		cout << endl;
-	}
+	// Create new midi note from incoming velocity and pitch. 
+	int newNote(int vel, int pitch);
+	// Find the corresponding note for a midi pitch value. (outputs -1 if not found)
+	int findIndexForMidiPitch(int pitch);
+	// Print a list of all midi notes, with their corresponding states.
+	void printAllNotes();
 	
 	int numVoices = 8;
 	int* activeNotes;
 	MidiNote** notes;
+	
+private:
+	void insertNewActiveNote(int index);
+	int insertNewNote(int vel, int pitch);
 };
 
 #endif

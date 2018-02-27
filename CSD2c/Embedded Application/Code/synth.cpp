@@ -4,7 +4,7 @@ Synth::Synth(WaveTable* wt) :
 	wt(wt),
 	mvOscillator(44100, wt, 8)
 {
-	cout << "inside synth constructor" << endl;
+	// cout << "inside synth constructor" << endl;
 	mvOscillator.setMidiNote(midiNote);
 }
 
@@ -41,11 +41,59 @@ void Synth::setMidiNote(float vel, float pitch) {
 	} else {
 		tempVel = (vel / 127.0f) * 0.5f + 0.5f;
 	}
-	cout << "velocity: " << tempVel << endl;
+	// cout << "velocity: " << tempVel << endl;
 	setAmplitude(tempVel);
 }
 	
 void Synth::setMidiPitch(float midiP) {
 	midiNote = midiP;
 	mvOscillator.setMidiNote(midiP);
+}
+
+
+
+
+PolySynth::PolySynth(WaveTable* wt, int numSynths)
+	: wt(wt), 	
+	  numSynths(numSynths),
+	  polyMidi(numSynths)
+{
+	// Fill synth array with the chosen numbers of synths.
+	synths = new Synth*[numSynths];
+	for(int i = 0; i < numSynths; i++) {
+		synths[i] = new Synth(wt);
+		synths[i]->setAmplitude(0.0f);
+	}
+	
+	normAmp = 1.0f / (float)numSynths;
+}
+
+PolySynth::~PolySynth() {
+	for(int i = 0; i < numSynths; i++) {
+		delete(synths[i]);
+	}
+	delete(synths);
+}
+
+void PolySynth::process(float* buffer, int buffersize) {
+	for(int i = 0; i < buffersize; i++) {
+		buffer[i] = 0.0f;
+	}
+	for(int i = 0; i < numSynths; i++) {
+		synths[i]->processAdd(buffer, buffersize);
+	}
+	for(int i = 0; i < buffersize; i++) {
+		buffer[i] *= normAmp;
+	}
+}
+
+void PolySynth::newNote(int vel, int pitch) {
+	int note = polyMidi.newNote(vel, pitch);
+	synths[note]->setMidiNote(vel, pitch);
+}
+
+void PolySynth::setWaveType(int choice) {
+	for(int i = 0; i < numSynths; i++) {
+		synths[i]->setWaveType(choice);
+	}
 }

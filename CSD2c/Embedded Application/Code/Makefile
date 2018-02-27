@@ -10,8 +10,8 @@ LDFLAGS= -L"C:/Program Files (x86)/Jack/lib" -llibjack
 
 all: example cleano
 
-example : wavetable.o oscillator.o synth.o jack_module.o main.o 
-	$(CC) -o $@ $(CFLAGS) wavetable.o oscillator.o synth.o jack_module.o main.o $(LDFLAGS)
+example : polymidi.o wavetable.o oscillator.o synth.o jack_module.o main.o 
+	$(CC) -o $@ $(CFLAGS) polymidi.o wavetable.o oscillator.o synth.o jack_module.o main.o $(LDFLAGS)
 
 .cpp.o:
 	$(CC) -c $< $(CFLAGS)

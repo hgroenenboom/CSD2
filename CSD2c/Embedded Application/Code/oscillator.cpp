@@ -1,5 +1,16 @@
 #include "oscillator.h"
 
+Oscillator::Oscillator(int samplerate, WaveTable* wavetable) 
+	: samplerate(samplerate),
+	wavetable(wavetable)
+{
+	currentWave = wavetable->waves[0].wave;
+}
+
+Oscillator::~Oscillator() {
+	
+}
+
 float Oscillator::interpolate(float index) {
 	int i = (int)floor(index);
 	int i2 = (i + 1) % 2048;
@@ -8,13 +19,6 @@ float Oscillator::interpolate(float index) {
 	return value;
 }
 
-Oscillator::Oscillator(int samplerate, WaveTable* wavetable) 
-	: samplerate(samplerate),
-	wavetable(wavetable)
-{
-	currentWave = wavetable->waves[0].wave;
-}
-	
 void Oscillator::nextAudioBlock(float* buffer, int buffersize) {
 	for(int i = 0; i < buffersize; i++) {
 		buffer[i] = amplitude * interpolate(phase * 2048.0f);
@@ -42,10 +46,10 @@ MVOscillator::MVOscillator(int samplerate, WaveTable* wavetable, int numvoices=8
 	wt(wavetable)
 {
 	normAmp = 1.0f / (float)numVoices;
-	cout << "Normalizing amp: " << normAmp << endl;
+	// cout << "Normalizing amp: " << normAmp << endl;
 	
-	oscArray = new Oscillator*[numVoices];
 	detuneArray = new float[numVoices];
+	oscArray = new Oscillator*[numVoices];
 	if(wt != nullptr) {
 		for(int i = 0; i < numVoices; i++) {
 		   oscArray[i] = new Oscillator(samplerate, wt);
@@ -57,6 +61,14 @@ MVOscillator::MVOscillator(int samplerate, WaveTable* wavetable, int numvoices=8
 		createDetuneArray(detune);
 		setMidiNote(midi);
 	}
+}
+
+MVOscillator::~MVOscillator() {
+	delete(detuneArray);
+	for(int i = 0; i < numVoices; i++) {
+		delete(oscArray[i]);
+	}
+	delete(oscArray);
 }
 
 void MVOscillator::nextAudioBlock(float* buffer, int buffersize) {

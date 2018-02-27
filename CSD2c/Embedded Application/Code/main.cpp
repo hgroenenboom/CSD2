@@ -24,11 +24,13 @@ void optionMenu() {
 int main(int argc,char **argv)
 {
 	WaveTable wt;
-	wt.getWaveByIndex(4);
+	// wt.getWaveByIndex(4);
 	wt.printWaveNames();
-    Synth synth(&wt);
+	
+    Synth synth(&wt); // Not used
 	PolySynth polySynth(&wt);
 
+	// Old, probably not used
     double amplitude = 0.5;
     double* ampPointer = &amplitude;
 
@@ -47,8 +49,8 @@ int main(int argc,char **argv)
     jack.init(/*argv[0]*/"programma");
     jack.autoConnect();
 
-
-    //keep the program running and listen for user input, q = quit
+    
+	//keep the program running and listen for user input, q = quit
     bool running = true;
 
     char c[100];
@@ -119,7 +121,7 @@ int main(int argc,char **argv)
 
                 if(midiP > 0.0f && midiP < 127.0f) {
 					int index = polySynth.polyMidi.findIndexForMidiPitch(midiP);
-					cout << "IndexForMidiPitch: " << index << endl;
+					// cout << "IndexForMidiPitch: " << index << endl;
 					if(index == -1) {
 						polySynth.newNote(127, midiP);
 					} else {
