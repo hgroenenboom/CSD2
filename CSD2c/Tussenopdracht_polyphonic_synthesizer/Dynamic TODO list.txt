@@ -1,0 +1,30 @@
+TODO:
+
+- update class diagram
+- decide whether to uses ints or floats for the midi values.
+- add midikeyboard input
+- anti-aliasing filters
+- comments / refactorring
+
+TODO COULDs Maybe:
+- decide whether to still use the multioscillator
+- filter
+- distortion
+
+TODO WOULDs Maybest:
+- Envelope
+- Waveshaping
+
+
+Leuke truc ipv commenten:
+
+bool var;
+#if var
+	<code>
+#endif
+
+of 
+
+#if 0
+	<code>
+#endif
