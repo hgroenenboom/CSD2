@@ -3,7 +3,7 @@ SOGM ideeen:
 - sample list aanmaken met een forloop -> de hoeveelheid beschikbare samples scannen in de map. 
 - samples polyfoon maken
 
-file directories / directory scanning -> pyton documentation
+file directories / directory scanning -> python documentation
 
 
 notes:

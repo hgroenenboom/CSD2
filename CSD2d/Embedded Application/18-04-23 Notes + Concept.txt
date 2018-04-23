@@ -1,0 +1,30 @@
+nog niet geleerde technieken:
+- waveshaping
+- distortion
+- filters
+- muziekanalyse
+- pitchshifting
+- systeemontwerp - high level - efficient
+
+Interesse: digitale filters en compositie tools
+
+Randvoorwaarden?
+Deadline? 	->  18-06
+
+- Logboek
+	Concept
+	Brainstorm
+	Technicalities
+	Bugs
+	Product
+- Schema
+	- Class diagram (met professionele layout!)
+	- dataflow diagram
+	- user interaction design
+- GIT mooi maken -> markup
+- Planning
+- Functionaliteiten voor de gebruiker
+
+Idee: Digitale DrumSampler met:
+	Een aantal midi keys met meerdere drum samples die ingeslepen kunnen worden
+	Elke drum heeft FX en elke key heeft FX: pitchshifting, velocity, filters, distortion, velocity controlled AR-envelopes, randomizer (amp), mixer.
