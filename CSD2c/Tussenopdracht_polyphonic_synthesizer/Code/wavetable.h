@@ -24,7 +24,7 @@ public:
 	const static int numValues = 2048;
 	float wave[numValues];
 	float DOUBLE_PI = 2.0f * PI;
-	char* name;
+	char* name; 
 };
 
 class SineWave : public Wave {

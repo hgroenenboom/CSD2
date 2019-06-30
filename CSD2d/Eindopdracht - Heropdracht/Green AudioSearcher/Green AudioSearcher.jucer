@@ -8,12 +8,19 @@
             file="Source/MainComponent.cpp"/>
       <FILE id="dqfuIs" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
+    <FILE id="o0iRu0" name="AFFeatureSet.h" compile="0" resource="0" file="Source/AFFeatureSet.h"/>
+    <FILE id="ShNZOW" name="AudioAnalyzer.cpp" compile="1" resource="0"
+          file="Source/AudioAnalyzer.cpp"/>
+    <FILE id="PRexHt" name="AudioAnalyzer.h" compile="0" resource="0" file="Source/AudioAnalyzer.h"/>
     <FILE id="vNbf34" name="AudioFile.h" compile="0" resource="0" file="Source/AudioFile.h"/>
+    <FILE id="QBYnCq" name="FolderManager.h" compile="0" resource="0" file="Source/FolderManager.h"/>
     <FILE id="OuYCtC" name="MDArray.cpp" compile="1" resource="0" file="Source/MDArray.cpp"/>
     <FILE id="IVa1y3" name="MDArray.h" compile="0" resource="0" file="Source/MDArray.h"/>
     <FILE id="WN8mwf" name="MDVector.h" compile="0" resource="0" file="Source/MDVector.h"/>
     <FILE id="CH4P7K" name="PlayableAudiofile.h" compile="0" resource="0"
           file="Source/PlayableAudiofile.h"/>
+    <FILE id="FOozN6" name="SimilarityChecker.h" compile="0" resource="0"
+          file="Source/SimilarityChecker.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">

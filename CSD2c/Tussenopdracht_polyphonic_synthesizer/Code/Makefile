@@ -1,7 +1,7 @@
 CC = g++
 
 # Include map (header files)
-CFLAGS = -I/usr/local/include -Wall -std=c++1z
+CFLAGS = -I"C:/Program Files (x86)/Jack/includes" -Wall -std=c++1z
 #LDFLAGS= -ljack
 
 # Library map (cpp of lib files)

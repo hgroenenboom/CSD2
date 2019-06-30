@@ -2,6 +2,8 @@
 
 //==============================================================================
 MainComponent::MainComponent()
+	//: set("swag.mp3", "v2.3", pars, vals, 3)
+	: set("swag.mp3|v2.3|a,b,c|0.241240,0.235350,0.762300")
 {
     setSize (800, 600);
 
@@ -16,6 +18,7 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
 
+	folderManager.analyseFolders();
 	addAndMakeVisible(&af);
 }
 

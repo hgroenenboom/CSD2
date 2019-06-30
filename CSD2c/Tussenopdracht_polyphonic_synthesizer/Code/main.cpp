@@ -39,8 +39,8 @@ T numberInput () {
 }
 
 void optionMenu() {
-    std::cout << "\n\n\-- Menu --\n\
-	Press 'm' to show the option Menu. \n\
+    std::cout << "\n\n-- Menu --\n\
+    Press 'm' to show the option Menu. \n\
 	Press 'q' when you want to quit the program.\n\
 	Press 'a' if you want to change the master amplitude. \n\
 	Press 'o' to change the wave type. \n\

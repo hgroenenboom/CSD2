@@ -13,9 +13,14 @@
 class AudioFile 
 {
 public:
+	AudioFile(File path)
+	{
+		init();
+		open(path);
+	}
 	AudioFile() 
 	{
-		formatManager.registerBasicFormats();
+		init();
 	}
 
 	~AudioFile() 
@@ -37,9 +42,10 @@ public:
 	long numSamples = -1;
 	int numChannels = -1;
 	String filename;
+	bool fileLoaded = false;
 
 	MDArray<float>* audio;
-protected:
+
 	void open(File file)
 	{
 		this->file = file;
@@ -54,9 +60,14 @@ protected:
 
 			read();
 		}
+		fileLoaded = true;
 	}
 
 private:
+	void init() {
+		formatManager.registerBasicFormats();
+	}
+
 	void stripSilence()
 	{
 		bool startSampleFound = false;
@@ -103,6 +114,6 @@ private:
 
 		delete audio;
 		audio = temp;
-		numSamples = endSample - startSample;
+		numSamples = endSample - startSample-1;
 	}
 };
