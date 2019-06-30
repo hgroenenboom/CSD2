@@ -19,14 +19,17 @@
 
 class AFFeatureSet {
 public:
+	AFFeatureSet() {
+	}
+
 	AFFeatureSet(std::string path, std::string version, std::string* params, float* val, int size) {
 		setData(path, version, params, val, size);
 		toString();
 	}	
 
-	AFFeatureSet(std::string data) {
-		fromString(data);
-	}
+	//AFFeatureSet(std::string data) {
+	//	fromString(data);
+	//}
 
 	std::string filePath;
 	std::string versionID;
@@ -35,7 +38,7 @@ public:
 	std::vector<float> values;
 	int numValues;
 
-	void fromString(std::string data) {		
+	//void fromString(std::string data) {		
 		//const std::string delimiter = "|";
 		//size_t pos = 0;
 		//std::vector<std::string> subStrings;
@@ -44,7 +47,7 @@ public:
 		//	data.erase(0, pos + delimiter.length());
 		//}
 		//subStrings.push_back( data );
-	}
+	//}
 
 	void setData(std::string path, std::string version, std::string* params, float* val, int size) {
 		filePath = path;

@@ -12,25 +12,41 @@
 #include "AFFeatureSet.h"
 #include <limits>
 
-class SimilarityChecker{
+class SimilarityChecker {
 public:
-	SimilarityChecker() {
-
+	SimilarityChecker(AudioAnalyzer* aAnalyzer) {
+		weights.resize(aAnalyzer->NUMPARAMS);
 	}
 
-	void sortBySimilarity(AFFeatureSet& s, std::vector<AFFeatureSet>& sets) {
+	std::vector<int> sortBySimilarity(AFFeatureSet& s, std::vector<AFFeatureSet>& sets, int numResults=1) {
 		resultingIndices.resize(sets.size());
 		
-		for (AFFeatureSet& s_2 : sets) {
-			if (&s == &s_2) {
-				resultingIndices.push_back( std::numeric_limits<float>::max() );
+		// test every file for similarity, store similarity with the file's index into a vector.
+		for (int i = 0; i < sets.size(); i++) {
+			AFFeatureSet& s_2 = sets[i];
+
+			if (s.filePath == s_2.filePath) {
+				resultingIndices[i] = std::pair<float, int>(10000000000.0f, i);
 			}
 			else {
-				resultingIndices.push_back(getEuclideanDistance(s, s_2));
+				resultingIndices[i] = std::pair<float, int>(getEuclideanDistance(s, s_2), i);
 			}
 		}
+
+		// sort vector, to put the most similar files first.
+		std::sort(resultingIndices.begin(), resultingIndices.end());
+		
+		// get indices of the amount of similar files which the user requested.
+		std::vector<int> sortedIndices;
+		sortedIndices.resize(numResults);
+		for (int i = 0; i < numResults; i++) {
+			sortedIndices[i] = resultingIndices[i].second;
+		}
+
+		return sortedIndices;
 	}
 private:
+	// get the euclidean distance between two AFFeatureSets
 	float getEuclideanDistance(AFFeatureSet& s1, AFFeatureSet& s2) {
 		float sum = 0.0f;
 		for (int i = 0; i < s1.numValues; i++) {
@@ -39,5 +55,6 @@ private:
 		return sqrt(sum);
 	}
 
-	std::vector<int> resultingIndices;
+	std::vector<std::pair<float, int>> resultingIndices;
+	std::vector<float> weights;
 };

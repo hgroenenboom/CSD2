@@ -5,6 +5,7 @@
 #include "FolderManager.h"
 #include "AFFeatureSet.h"
 #include "SimilarityChecker.h"
+#include "AudioAnalyzer.h"
 
 //==============================================================================
 /*
@@ -27,18 +28,18 @@ public:
     void paint (Graphics& g) override;
     void resized() override;
 
+	void searchSimilarAudio();
 private:
     //==============================================================================
     // Your private member variables go here...
-	
-	std::string pars[3] = { "a", "b", "c" };
-	float vals[3] = { 0.24124f, 0.23535f, 0.7623f };
-
 	PlayableAudioFile af;
+	const int numSimilarFiles = 10;
 	PlayableAudioFile* similarAfs;
 	FolderManager folderManager;
-	AFFeatureSet set;
 	SimilarityChecker simChecker;
+	AudioAnalyzer audioAnalyser;
+
+	TextButton searchButton;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

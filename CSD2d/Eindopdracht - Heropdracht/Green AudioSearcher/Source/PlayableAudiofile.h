@@ -3,9 +3,11 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AudioFile.h"
 
-class PlayableAudioFile : public Component, public AudioFile {
+class PlayableAudioFile : public Component, public AudioFile, public FileDragAndDropTarget {
 public:
-	PlayableAudioFile()
+	PlayableAudioFile(bool enableInwardDrag = false, bool enableOutwardDrag = true)
+		: inwardDragEnabled(enableInwardDrag)
+		, outwardDragEnabled(enableOutwardDrag)
 	{
 		addAndMakeVisible(&playButton);
 		playButton.setButtonText("play audiofile");
@@ -14,15 +16,30 @@ public:
 		addAndMakeVisible(&openButton);
 		openButton.setButtonText("open new audiofile");
 		openButton.onClick = [&] { openButtonClicked(); };
+
+		fileLoadedCallback = [&]() {
+			textField.setText(file.getFullPathName());
+		};
+		addAndMakeVisible(&textField);
 	}
 
-	void paint(Graphics&) override {}
+	void paint(Graphics&) override {
+		if (fileDraggedOver) {
+			openButton.setColour(TextButton::ColourIds::buttonColourId, Colours::aquamarine);
+		}
+		else {
+			openButton.setColour(TextButton::ColourIds::buttonColourId, Colours::black);
+		}
+	}
+
 	void resized() override {
 		auto s = getLocalBounds();
-		s.reduce(6, 6);
+		s.reduce(2, 2);
+		auto s_b = s.removeFromBottom( 30 );
 
 		playButton.setBounds( s.removeFromLeft( (int)( 0.5f * s.getWidth() ) ) );
 		openButton.setBounds( s );
+		textField.setBounds(s_b);
 	}
 
 	void openButtonClicked() {
@@ -47,7 +64,7 @@ public:
 	}
 
 	void getAudioBlock(AudioBuffer<float> buffer, int bufSize) {
-		if (isPlaying) {
+		if (isPlaying && fileLoaded) {
 			float** f = buffer.getArrayOfWritePointers();
 			const float startPosition = position;
 			const float speed = 1.0f; // should calculate via samplerate
@@ -59,7 +76,7 @@ public:
 					const int pos1 = floor(position);
 					const int pos2 = ceil(position);
 
-					f[c][i] = (1.0f - w) * (*audio)[c][pos1] + w * (*audio)[c][pos2];
+					f[c][i] += (1.0f - w) * (*audio)[c][pos1] + w * (*audio)[c][pos2];
 
 					position += speed;
 					if (position > numSamples) {
@@ -77,11 +94,52 @@ public:
 private:
 	TextButton playButton;
 	TextButton openButton;
+	TextEditor textField;
 
 	float position = 0;
 	bool isPlaying = false;
+	bool inwardDragEnabled = false;
+	bool outwardDragEnabled = false;
 
 	void playStopButtonClicked() {
 		playStop();
+		if (isPlaying) {
+			playButton.setButtonText("stop audiofile");
+		}
+		else {
+			playButton.setButtonText("play audiofile");
+		}
+	}
+
+	virtual void loadingAudiofile() override
+	{
+		this->setEnabled(false);
+	}
+	
+	virtual void audiofileLoaded() override 
+	{
+		this->setEnabled(true);
+	}
+
+	bool fileDraggedOver = false;
+	bool isInterestedInFileDrag(const StringArray &files) override {
+		return inwardDragEnabled;
+	}
+	void fileDragEnter(const StringArray &files, int x, int y) override {
+		if (files[0].endsWith(".wav")) {
+			fileDraggedOver = true;
+			repaint();
+		}
+	}
+	void fileDragExit(const StringArray &files) override {
+		fileDraggedOver = false;
+		repaint();
+	}
+	void filesDropped(const StringArray &files, int x, int y) override {
+		if (files[0].endsWith(".wav")) {
+			openFile(files[0]);
+			fileDraggedOver = false;
+			repaint();
+		}
 	}
 };

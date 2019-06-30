@@ -25,29 +25,35 @@ public:
 
 	~AudioFile() 
 	{
-	}
-
-	void read()
-	{
-		audio = new MDArray<float>(numChannels, numSamples);
-		reader->read( audio->getPointers(), numChannels, 0, numSamples );
-		stripSilence();
+		delete reader;
+		delete audio;
 	}
 
 	File file;
 	AudioFormatReader* reader = nullptr;
 	AudioFormatManager formatManager;
+	std::function<void()> fileLoadedCallback = nullptr;
 
 	long bitDepth = -1;
 	long numSamples = -1;
 	int numChannels = -1;
 	String filename;
+	String fullPath;
 	bool fileLoaded = false;
+	int sampleRate = 0;
 
-	MDArray<float>* audio;
+	MDArray<float>* audio = nullptr;
 
 	void open(File file)
 	{
+		loadingAudiofile();
+		fileLoaded = false;
+
+		if (reader != nullptr) 
+			delete reader;
+		if (audio != nullptr)
+			delete audio;
+
 		this->file = file;
 		reader = formatManager.createReaderFor(file); // [10]
 
@@ -57,15 +63,30 @@ public:
 			bitDepth = reader->bitsPerSample;
 			numSamples = reader->lengthInSamples;
 			filename = file.getFileName();
+			fullPath = file.getFullPathName();
+			sampleRate = reader->sampleRate;
 
 			read();
 		}
+		
 		fileLoaded = true;
+		audiofileLoaded();
+		if (fileLoadedCallback != nullptr)
+			fileLoadedCallback();
 	}
 
 private:
 	void init() {
 		formatManager.registerBasicFormats();
+	}
+
+	void read()
+	{
+		fileLoaded = false;
+		audio = new MDArray<float>(numChannels, numSamples);
+		reader->read(audio->getPointers(), numChannels, 0, numSamples);
+		stripSilence();
+		fileLoaded = true;
 	}
 
 	void stripSilence()
@@ -116,4 +137,7 @@ private:
 		audio = temp;
 		numSamples = endSample - startSample-1;
 	}
+
+	virtual void loadingAudiofile() {}
+	virtual void audiofileLoaded() {}
 };

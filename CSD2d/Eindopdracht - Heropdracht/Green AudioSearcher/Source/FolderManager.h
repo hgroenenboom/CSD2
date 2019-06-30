@@ -72,10 +72,6 @@ public:
 	}
 
 	void analyseFolders() {
-		// temporarily add folders here
-		addFolder(0, "C:\\Users\\HAROL\\Dropbox\\Muziek\\Samples\\Created\\DrumKits");
-		addFolder("C:\\Users\\HAROL\\Dropbox\\Muziek\\Samples\\Created\\DrumKits");
-
 		// check which folders should be analyzed
 		std::vector<Folder> foldersToAnalyse;
 		for (int i = 0; i < folders.size(); i++) {
@@ -85,40 +81,37 @@ public:
 		}
 
 		// find all files which should be analyzed
-		std::vector<File> filesToAnalyse;
+		std::vector<String> filesToAnalyse;
 		for (Folder& f : foldersToAnalyse) {
 			// find all wave files
 			DirectoryIterator d_iter( File(f.path), true, "*.wav");
 			while (d_iter.next())
 			{
-				File newFile = d_iter.getFile();
+				String newFile = d_iter.getFile().getFullPathName();
 
 				// dont add duplicates
-				if (!findInVector<File>(filesToAnalyse, newFile).first) {
+				if (!findInVector<String>(filesToAnalyse, newFile).first) {
 					filesToAnalyse.push_back(newFile);
 				};
 			}
 		}
 
 		featureSets.clear();
-		for (File& f : filesToAnalyse) {
-			AudioFile af(f);
+		for (String& f : filesToAnalyse) {
 			bool succes = false;
-			AFFeatureSet set = audioAnalyzer.analyseAudio(&af, &succes);
+			AFFeatureSet set = audioAnalyzer.analyseAudio(f, &succes);
 			if (succes) {
 				featureSets.push_back(set);
 			}
 		}
 	}
 
+	const std::vector<AFFeatureSet>& getFeatureSets() {
+		return featureSets;
+	}
 private:
 	std::vector<Folder> folders;
 	std::vector<AFFeatureSet> featureSets;
 	AudioAnalyzer audioAnalyzer;
-
-	//bool databaseExists = false;
-	//bool isDatabaseLoaded = false;
-	//std::string databasePath = "database.json";
-	//File databaseFile;
 };
 
