@@ -14,6 +14,7 @@
     <FILE id="PRexHt" name="AudioAnalyzer.h" compile="0" resource="0" file="Source/AudioAnalyzer.h"/>
     <FILE id="vNbf34" name="AudioFile.h" compile="0" resource="0" file="Source/AudioFile.h"/>
     <FILE id="QBYnCq" name="FolderManager.h" compile="0" resource="0" file="Source/FolderManager.h"/>
+    <FILE id="UAu0Oo" name="LabelSlider.h" compile="0" resource="0" file="Source/LabelSlider.h"/>
     <FILE id="OuYCtC" name="MDArray.cpp" compile="1" resource="0" file="Source/MDArray.cpp"/>
     <FILE id="IVa1y3" name="MDArray.h" compile="0" resource="0" file="Source/MDArray.h"/>
     <FILE id="WN8mwf" name="MDVector.h" compile="0" resource="0" file="Source/MDVector.h"/>

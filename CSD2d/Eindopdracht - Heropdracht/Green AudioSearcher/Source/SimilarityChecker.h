@@ -11,11 +11,40 @@
 #pragma once
 #include "AFFeatureSet.h"
 #include <limits>
+#include "LabelSlider.h"
 
-class SimilarityChecker {
+class SimilarityChecker : public Component {
 public:
 	SimilarityChecker(AudioAnalyzer* aAnalyzer) {
 		weights.resize(aAnalyzer->NUMPARAMS);
+		sliders.resize(aAnalyzer->NUMPARAMS);
+		for (int i = 0; i < sliders.size(); i++) {
+			sliders[i] = new LabelSlider();
+			auto s = aAnalyzer->PARAMS[i];
+			sliders[i]->setSlider(0.0f, 1.0f, 0.001f, 0.5f, 1.0f, String(s) );
+			sliders[i]->callBack = [=](float v) {
+				weights[i] = v;
+			};
+			addAndMakeVisible(sliders[i]);
+		}
+	}
+
+	~SimilarityChecker() {
+		for (int i = 0; i < sliders.size(); i++) {
+			delete sliders[i];
+		}
+	}
+
+	void paint(Graphics& g) override {
+
+	}
+	void resized() override {
+		// place elements inside the components drawing region
+		auto l = getLocalBounds();
+		const float sliderHeight = getHeight() / sliders.size();
+		for (int i = 0; i < sliders.size(); i++) {
+			sliders[i]->setBounds(l.removeFromTop(sliderHeight));
+		}
 	}
 
 	std::vector<int> sortBySimilarity(AFFeatureSet& s, std::vector<AFFeatureSet>& sets, int numResults=1) {
@@ -50,11 +79,13 @@ private:
 	float getEuclideanDistance(AFFeatureSet& s1, AFFeatureSet& s2) {
 		float sum = 0.0f;
 		for (int i = 0; i < s1.numValues; i++) {
-			sum += pow(s1.values[i] - s2.values[i], 2.0f);
+			sum += weights[i] * pow(s1.values[i] - s2.values[i], 2.0f);
 		}
 		return sqrt(sum);
 	}
 
 	std::vector<std::pair<float, int>> resultingIndices;
+
 	std::vector<float> weights;
+	std::vector<LabelSlider*> sliders;
 };

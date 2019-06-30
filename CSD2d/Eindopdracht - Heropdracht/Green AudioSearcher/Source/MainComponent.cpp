@@ -3,7 +3,7 @@
 //==============================================================================
 MainComponent::MainComponent()
 	: af(true, true)
-	, simChecker(&audioAnalyser)
+	, similarityChecker(&audioAnalyser)
 {
 	similarAfs = new PlayableAudioFile[numSimilarFiles];
 
@@ -17,24 +17,34 @@ MainComponent::MainComponent()
     {
         setAudioChannels (2, 2);
     }
+	
+	openFolderButton.setButtonText("open folder");
+	addAndMakeVisible(&openFolderButton);
+	openFolderButton.onClick = [&]() {
+		FileChooser chooser("Select folder to analyse", File());                                        // [7]
+		if (chooser.browseForDirectory())                                    // [8]
+		{
+			File file(chooser.getResult());                                  // [9]
+			folderManager.addFolder(0, file.getFullPathName().toStdString());
 
-	folderManager.addFolder(0, "C:\\Users\\HAROL\\Dropbox\\Muziek\\Samples\\Created\\DrumKits");
-	//folderManager.addFolder("C:\\Users\\HAROL\\Dropbox\\Muziek\\Samples");
-	folderManager.analyseFolders();
+			setEnabled(false);
+			folderManager.analyseFolders();
+			setEnabled(true);
+		}
+	};
 
 	for (int i = 0; i < numSimilarFiles; i++) {
 		addAndMakeVisible(&similarAfs[i]);
 	}
 	addAndMakeVisible(&af);
 
-	af.open( File(folderManager.getFeatureSets()[0].filePath) );
-	searchSimilarAudio();
-
 	addAndMakeVisible(&searchButton);
 	searchButton.onClick = [&]() {
 		searchSimilarAudio();
 	};
 	searchButton.setButtonText("search");
+
+	addAndMakeVisible(&similarityChecker);
 
 	setSize(800, 600);
 }
@@ -77,7 +87,11 @@ void MainComponent::resized()
 {
 	auto right = getLocalBounds();
 	auto left = right.removeFromLeft( 0.5f*getWidth() );
-	af.setBounds(left.removeFromTop(0.5f * getHeight()));
+	auto topLeft = left.removeFromTop(0.2f * getHeight());
+	openFolderButton.setBounds(topLeft);
+
+	af.setBounds(left.removeFromTop(0.2f * getHeight()));
+	similarityChecker.setBounds(left.removeFromTop(0.5f * getHeight()));
 	searchButton.setBounds(left);
 
 
@@ -94,7 +108,7 @@ void MainComponent::searchSimilarAudio() {
 	AFFeatureSet set = audioAnalyser.analyseAudio(af.fullPath, &succes);
 
 	if (succes) {
-		auto indicesSortedBySimilarity = simChecker.sortBySimilarity(set, sets, 10);
+		auto indicesSortedBySimilarity = similarityChecker.sortBySimilarity(set, sets, 10);
 		for (int i = 0; i < 10; i++) {
 			similarAfs[i].open(File(sets[indicesSortedBySimilarity[i]].filePath));
 		}
