@@ -3,8 +3,7 @@ Voor het builden van de project moet de Projucer v5.4.3 (of later) van ROLI gedo
 
 ## Builds
 in de builds folder bevinden zich de projectfiles die door JUCE (Projucer) zijn gegenereerd  
-en in de VisualStudio2017 map zijn een aantal executables te vinden. Maar voor een (windows 64) executable kan je beter kijken  
-in de "verslag en projectomschrijving" folder. De LinuxMakefile is in deze commit helaas nog niet getest.  
+en in de VisualStudio2017 map zijn een aantal executables te vinden. Maar voor een (windows 64) executable kan je beter kijken in de "verslag en projectomschrijving" folder. De LinuxMakefile is in deze commit helaas nog niet getest.  
 
 ## JuceLibraryCode
 code die gegenereert is door de Projucer. Bepalend voor projectsettings en include directories.  
