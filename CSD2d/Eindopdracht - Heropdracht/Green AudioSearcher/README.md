@@ -1,4 +1,4 @@
-#Project
+# Project
 Voor het builden van de project moet de Projucer v5.4.3 (of later) van ROLI gedownload worden. Dit is het belangrijkste framework van dit project en hiermee kan je de 'Green AudioSearcher.jucer' openen.
 
 ## Builds
