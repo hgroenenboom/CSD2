@@ -1,7 +1,8 @@
 #pragma once
 
-#include "MDArray.h"
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <algorithm>
+#include <string>
+#include <functional>
 
 // Hiermee kan je kiezen uit welke scope je wilt breaken door je scope een naam te geven.
 #define named(blockname) goto blockname; \
@@ -13,95 +14,44 @@
 class AudioFile 
 {
 public:
-	AudioFile(File path)
+	AudioFile() {
+	};
+	~AudioFile()
 	{
-		init();
-		open(path);
-	}
-	AudioFile() 
-	{
-		init();
+		deleteAudio();
 	}
 
-	~AudioFile() 
-	{
-		delete reader;
-		delete audio;
-	}
-
-	File file;
-	AudioFormatReader* reader = nullptr;
-	AudioFormatManager formatManager;
+	// callbacks
 	std::function<void()> fileLoadedCallback = nullptr;
 
+	// audiofile variables
 	long bitDepth = -1;
 	long numSamples = -1;
 	int numChannels = -1;
-	String filename;
-	String fullPath;
+	std::string filename;
+	std::string fullPath;
 	bool fileLoaded = false;
 	int sampleRate = 0;
+	// the actual audiobuffer
+	float** audio = nullptr;
 
-	MDArray<float>* audio = nullptr;
+	// callback functions for inheritance
+	virtual void loadingAudiofile() {}
+	virtual void audiofileLoaded() {}
 
-	void open(File file)
-	{
-		loadingAudiofile();
-		fileLoaded = false;
-
-		if (reader != nullptr) 
-			delete reader;
-		if (audio != nullptr)
-			delete audio;
-
-		this->file = file;
-		reader = formatManager.createReaderFor(file); // [10]
-
-		if (reader != nullptr)
-		{
-			numChannels = reader->numChannels;
-			bitDepth = reader->bitsPerSample;
-			numSamples = reader->lengthInSamples;
-			filename = file.getFileName();
-			fullPath = file.getFullPathName();
-			sampleRate = reader->sampleRate;
-
-			read();
-		}
-		
-		fileLoaded = true;
-		audiofileLoaded();
-		if (fileLoadedCallback != nullptr)
-			fileLoadedCallback();
-	}
-
-private:
-	void init() {
-		formatManager.registerBasicFormats();
-	}
-
-	void read()
-	{
-		fileLoaded = false;
-		audio = new MDArray<float>(numChannels, numSamples);
-		reader->read(audio->getPointers(), numChannels, 0, numSamples);
-		stripSilence();
-		fileLoaded = true;
-	}
-
+	// strip silence from MDArray<float>
 	void stripSilence()
 	{
-		bool startSampleFound = false;
-		bool endSampleFound = false;
 		int startSample = 0;
 		int endSample = numSamples;
 		
+		// find startsample
 		named (outer)
 		for (int i = 0; i < numSamples; i++) 
 		{
 			for (int c = 0; c < numChannels; c++)
 			{
-				const float v = abs((*audio)[c][i]);
+				const float v = std::abs(audio[c][i]);
 				if ( v > 0.000001f )
 				{
 					startSample = i;
@@ -110,12 +60,13 @@ private:
 			}
 		}
 
+		// find endsample
 		named(outer_2)
 		for (int i = numSamples - 1; i == 0; i--)
 		{
 			for (int c = 0; c < numChannels; c++)
 			{
-				const float v = abs((*audio)[c][i]);
+				const float v = std::abs(audio[c][i]);
 				if (v > 0.000001f)
 				{
 					endSample = i;
@@ -124,20 +75,45 @@ private:
 			}
 		}
 
-		MDArray<float>* temp = new MDArray<float>(2, endSample - startSample);
+		// create temporary MD array
+		float** temp = new float*[numChannels];
+		for (int i = 0; i < numChannels; i++) {
+			temp[i] = new float[endSample - startSample];
+		}
 		
+		// copy trimmed audio to temporary array
 		for (int c = 0; c < numChannels; c++)
 		{
 			for (int i = 0; i < endSample - startSample; i++) {
-				(*temp)[c][i] = (*audio)[c][i + startSample];
+				temp[c][i] = audio[c][i + startSample];
 			}
 		}
 
-		delete audio;
+		// swap pointers and adjust length
+		deleteAudio();
 		audio = temp;
 		numSamples = endSample - startSample-1;
 	}
 
-	virtual void loadingAudiofile() {}
-	virtual void audiofileLoaded() {}
+	// generate new multidimensional array
+	void newAudio(int numChans, int numSamps) {
+		numChannels = numChans;
+		numSamples = numSamps;
+
+		audio = new float*[numChans];
+		for (int i = 0; i < numChans; i++) {
+			audio[i] = new float[numSamps];
+		}
+	}
+
+	// delete multidimensional array
+	void deleteAudio() {
+		if (audio != nullptr) {
+			for (int i = 0; i < numChannels; i++) {
+				delete[] audio[i];
+			}
+			delete[] audio;
+			audio = nullptr;
+		}
+	}
 };

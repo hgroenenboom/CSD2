@@ -8,36 +8,34 @@
   ==============================================================================
 */
 
-// TODO 
-// - HOEZO NIET JSON!!!!
-
 #pragma once
 #include <string>
 #include <vector>
 #include <iostream>
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <exception>
 
 class AFFeatureSet {
 public:
 	AFFeatureSet() {
 	}
 
-	AFFeatureSet(std::string path, std::string version, std::string* params, float* val, int size) {
-		setData(path, version, params, val, size);
-		toString();
+	AFFeatureSet(std::string path, std::string version, std::vector<std::string>& params, std::vector<float>& val) {
+		setData(path, version, params, val);
 	}	
 
+	// not tested, finished and used yet
 	//AFFeatureSet(std::string data) {
 	//	fromString(data);
 	//}
 
+	// member variables
 	std::string filePath;
 	std::string versionID;
-
 	std::vector<std::string> parameters;
 	std::vector<float> values;
 	int numValues;
 
+	// not tested, finished and used yet
 	//void fromString(std::string data) {		
 		//const std::string delimiter = "|";
 		//size_t pos = 0;
@@ -49,20 +47,26 @@ public:
 		//subStrings.push_back( data );
 	//}
 
-	void setData(std::string path, std::string version, std::string* params, float* val, int size) {
+	void setData(std::string path, std::string version, std::vector<std::string>& params, std::vector<float>& val) {
+		if (params.size() != val.size()) {
+			throw(std::exception());
+		}
+		
 		filePath = path;
 		versionID = version;
+		numValues = params.size();
 
-		numValues = size;
-		parameters.resize(size);
-		values.resize(size);
+		parameters.resize(numValues);
+		values.resize(numValues);
 
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < numValues; i++) {
 			parameters[i] = params[i];
 			values[i] = val[i];
 		}
 	}
 
+	// convert to string for use in databases
+	//		might become XML or JSON.
 	std::string toString() {
 		std::string data = "?";
 		data.append(filePath);

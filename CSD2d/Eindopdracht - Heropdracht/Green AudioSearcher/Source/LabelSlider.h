@@ -19,6 +19,8 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 
+// Simple slider which automaticly adds a label on its left
+// made for simple adding of slider objects
 class LabelSlider : public Component, public Slider::Listener {
 public:
 	LabelSlider() {

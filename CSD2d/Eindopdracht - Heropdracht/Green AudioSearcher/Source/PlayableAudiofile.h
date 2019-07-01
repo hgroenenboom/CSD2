@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "AudioFile.h"
+#include "LoadableAudioFile.h"
 
-class PlayableAudioFile : public Component, public AudioFile, public FileDragAndDropTarget {
+class PlayableAudioFile : public Component, public LoadableAudioFile, public FileDragAndDropTarget {
 public:
 	PlayableAudioFile(bool enableInwardDrag = false, bool enableOutwardDrag = true)
 		: inwardDragEnabled(enableInwardDrag)
@@ -18,7 +18,7 @@ public:
 		openButton.onClick = [&] { openButtonClicked(); };
 
 		fileLoadedCallback = [&]() {
-			textField.setText(file.getFullPathName());
+			textField.setText( fullPath );
 		};
 		addAndMakeVisible(&textField);
 	}
@@ -53,7 +53,7 @@ public:
 	}
 
 	void openFile(File file) {
-		open(file);
+		open(file.getFullPathName().toStdString());
 		position = 0.0f;
 	}
 
@@ -76,7 +76,7 @@ public:
 					const int pos1 = floor(position);
 					const int pos2 = ceil(position);
 
-					f[c][i] += (1.0f - w) * (*audio)[c][pos1] + w * (*audio)[c][pos2];
+					f[c][i] += (1.0f - w) * audio[c][pos1] + w * audio[c][pos2];
 
 					position += speed;
 					if (position > numSamples) {

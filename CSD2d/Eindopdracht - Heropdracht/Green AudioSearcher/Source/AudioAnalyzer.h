@@ -9,82 +9,31 @@
 */
 
 #pragma once
-#include "AudioFile.h"
+#include "LoadableAudioFile.h"
 #include "AFFeatureSet.h"
-#include "../JuceLibraryCode/JuceHeader.h"
 #include <string>
-
-class FFTWrapper {
-	const static int FFTORDER = 8;
-	const static int FFTSIZE = 2 << FFTORDER;
-
-	dsp::FFT forwardFFT;            
-	float fftData[2 * FFTSIZE];
-	float magnitudes[FFTSIZE >> 1];
-public:
-	FFTWrapper() 
-		: forwardFFT(FFTORDER)
-	{
-	}
-
-	void processAF(AudioFile* af) {
-		const int numIterations = ceil(af->numSamples / FFTSIZE);
-		const float invNumChannels = 1.0f / af->numChannels;
-
-		// Add whole audiofile;
-		for (int n = 0; n < numIterations; n++) {
-			for (int i = 0; i < FFTSIZE; i++) {
-				fftData[i] = 0;
-
-				const int index = n * FFTSIZE + i;
-				for (int c = 0; c < af->numChannels; c++) {
-					if (index < af->numSamples) {
-						fftData[i] += invNumChannels * af->audio->getPointers()[c][n*FFTSIZE + i];
-					}
-				}
-			}
-		}
-
-		// normalize values
-		const float invNumIters = 1.0f / numIterations;
-		for (int i = 0; i < FFTSIZE; i++) {
-			fftData[i] *= invNumIters;
-		}
-
-		// calculate FFT
-		forwardFFT.performRealOnlyForwardTransform(fftData);
-		float maxMag = 0.0f;
-		for (int i = 0; i < FFTSIZE >> 1; i++) {
-			magnitudes[i] = sqrt( pow( fftData[ 2 * i ], 2.0f ) + pow( fftData[ 2 * i + 1 ], 2.0f ) );
-			maxMag = std::max(magnitudes[i], maxMag);
-		}
-		for (int i = 0; i < FFTSIZE >> 1; i++) {
-			magnitudes[i] /= maxMag;
-		}
-	}
-
-	float getMagnitudeForPartOfSpectrum(float rmin, float rmax) {
-		float sum = 0.0f;
-		const int rminInt = round(rmin * (FFTSIZE/4) );
-		const int rmaxInt = round(rmax * (FFTSIZE/4) );
-		for (int i = rminInt; i < rmaxInt; i++) {
-			sum += magnitudes[i];
-		}
-		sum /= rmaxInt - rminInt;
-		return sum;
-	}
-};
+#include "JuceFFTWrapper.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 
 class AudioAnalyzer {
 public:
+	// AudioAnalyzer settings
 	static const int NUMPARAMS = 5;
 	const std::string PARAMS[NUMPARAMS] = { "length", "mean", "low", "mid", "high" };
 	const std::string IDENTIFIER = "test v1.0.1";
 
-	AudioAnalyzer();
+	AudioAnalyzer() {
+		f.resize(NUMPARAMS);
+		p.resize(NUMPARAMS);
+
+		for (int i = 0; i < NUMPARAMS; i++) {
+			p[i] = PARAMS[i];
+		}
+	}
 
 	// stores whether analysis succeeds in the succes parameter
-	AFFeatureSet analyseAudio(String inputAudioFile, bool* succes) {
+	AFFeatureSet analyseAudio( std::string inputAudioFile, bool* succes) {
+		// init
 		*succes = false; 
 		af.open(inputAudioFile);
 
@@ -93,9 +42,11 @@ public:
 			return AFFeatureSet();
 		}
 		else {
+			// get audio data and perform fft analysis
 			getAudio();
 			fft.processAF(&af);
 
+			// store analysis values inside feature vector
 			f[getParamIndex("mean")] = getMean();
 			f[getParamIndex("length")] = 1.0f / (1.0f+ 0.2f*(af.numSamples / af.sampleRate));
 			const float lowLimit = 500.0f / af.sampleRate;
@@ -104,24 +55,26 @@ public:
 			f[getParamIndex("mid")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(lowLimit, midLimit));
 			f[getParamIndex("high")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(midLimit, 1.0f));
 
-			AFFeatureSet newSet( af.file.getFullPathName().toStdString(), IDENTIFIER, p, f, NUMPARAMS);
+			// create new feature set
+			AFFeatureSet newSet(af.fullPath, IDENTIFIER, p, f);
 			*succes = true;
 			return newSet;
 		}
 	}
 
+	// audiorelated variables
 	const static int maxChannels = 2;
 	const static int maxSamples = 44100 * 60 * 4;
 	float audio[2][maxSamples];
-
 private:
-	AudioFile af;
+	LoadableAudioFile af;
 	FFTWrapper fft;
-	float f[NUMPARAMS];
-	std::string p[NUMPARAMS];
+	std::vector<float> f;
+	std::vector<std::string> p;
 
+	// get audio from selected audiofile
 	void getAudio() {
-		const auto loadedAudioPointer = af.audio->getPointers();
+		const auto loadedAudioPointer = af.audio;
 		for (int c = 0; c < af.numChannels; c++) {
 			for (int i = 0; i < af.numSamples; i++) {
 				audio[c][i] = loadedAudioPointer[c][i];

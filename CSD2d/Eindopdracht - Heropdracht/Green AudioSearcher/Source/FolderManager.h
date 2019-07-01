@@ -14,34 +14,15 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AudioAnalyzer.h"
 
-// Helper function for easily finding elements inside vectors.
-template < typename T>
-std::pair<bool, int > findInVector(const std::vector<T>  & vecOfElements, const T  & element)
-{
-	std::pair<bool, int > result;
-
-	// Find given element in vector
-	auto it = std::find(vecOfElements.begin(), vecOfElements.end(), element);
-
-	if (it != vecOfElements.end())
-	{
-		result.second = distance(vecOfElements.begin(), it);
-		result.first = true;
-	}
-	else
-	{
-		result.first = false;
-		result.second = -1;
-	}
-
-	return result;
-}
-
+// simple folder class
 class Folder {
 public:
 	std::string path = "";
 	bool enabled = true;
 };
+
+/****************************************************************/
+/****************************************************************/
 
 class FolderManager {
 public:
@@ -50,6 +31,7 @@ public:
 	{
 	}
 
+	// add folder to Folder vector
 	void addFolder(int slot, std::string path) {
 		folders[slot].path = path;
 	}
@@ -67,6 +49,7 @@ public:
 		folders[slot].path = "";
 	}
 
+	// disable or enable a folder for analysis
 	void toggleFolder(int slot, bool state) {
 		folders[slot].enabled = state;
 	}
@@ -81,23 +64,24 @@ public:
 		}
 
 		// find all files which should be analyzed
-		std::vector<String> filesToAnalyse;
+		std::vector<std::string> filesToAnalyse;
 		for (Folder& f : foldersToAnalyse) {
 			// find all wave files
 			DirectoryIterator d_iter( File(f.path), true, "*.wav");
 			while (d_iter.next())
 			{
-				String newFile = d_iter.getFile().getFullPathName();
+				std::string newFile = d_iter.getFile().getFullPathName().toStdString();
 
 				// dont add duplicates
-				if (!findInVector<String>(filesToAnalyse, newFile).first) {
+				if (!findInVector<std::string>(filesToAnalyse, newFile).first) {
 					filesToAnalyse.push_back(newFile);
 				};
 			}
 		}
 
+		// analyse all found audiofiles and add to featuresSets
 		featureSets.clear();
-		for (String& f : filesToAnalyse) {
+		for (std::string& f : filesToAnalyse) {
 			bool succes = false;
 			AFFeatureSet set = audioAnalyzer.analyseAudio(f, &succes);
 			if (succes) {
@@ -113,5 +97,29 @@ private:
 	std::vector<Folder> folders;
 	std::vector<AFFeatureSet> featureSets;
 	AudioAnalyzer audioAnalyzer;
+
+	// Helper function for easily finding elements inside vectors.
+	template < typename T>
+	std::pair<bool, int > findInVector(const std::vector<T>  & vecOfElements, const T  & element)
+	{
+		std::pair<bool, int > result;
+
+		// Find given element in vector
+		auto it = std::find(vecOfElements.begin(), vecOfElements.end(), element);
+
+		if (it != vecOfElements.end())
+		{
+			result.second = distance(vecOfElements.begin(), it);
+			result.first = true;
+		}
+		else
+		{
+			result.first = false;
+			result.second = -1;
+		}
+
+		return result;
+	}
+
 };
 

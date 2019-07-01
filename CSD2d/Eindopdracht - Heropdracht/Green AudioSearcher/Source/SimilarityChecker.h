@@ -16,6 +16,7 @@
 class SimilarityChecker : public Component {
 public:
 	SimilarityChecker(AudioAnalyzer* aAnalyzer) {
+		// initialize weights and weightslider
 		weights.resize(aAnalyzer->NUMPARAMS);
 		sliders.resize(aAnalyzer->NUMPARAMS);
 		for (int i = 0; i < sliders.size(); i++) {
@@ -47,6 +48,7 @@ public:
 		}
 	}
 
+	// get featuresets vector sorted by it's similarity to the input featureset
 	std::vector<int> sortBySimilarity(AFFeatureSet& s, std::vector<AFFeatureSet>& sets, int numResults=1) {
 		resultingIndices.resize(sets.size());
 		

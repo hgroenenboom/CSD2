@@ -110,7 +110,7 @@ void MainComponent::searchSimilarAudio() {
 	if (succes) {
 		auto indicesSortedBySimilarity = similarityChecker.sortBySimilarity(set, sets, 10);
 		for (int i = 0; i < 10; i++) {
-			similarAfs[i].open(File(sets[indicesSortedBySimilarity[i]].filePath));
+			similarAfs[i].open( sets[indicesSortedBySimilarity[i]].filePath );
 		}
 	}
 }
