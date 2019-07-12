@@ -3,6 +3,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PlayableAudiofile.h"
 #include "FolderManager.h"
+#include "FolderManagerComponent.h"
 #include "AFFeatureSet.h"
 #include "SimilarityChecker.h"
 #include "AudioAnalyzer.h"
@@ -39,7 +40,9 @@ private:
 	FolderManager folderManager;
 	SimilarityChecker similarityChecker;
 
-	TextButton openFolderButton;
+	//TextButton openFolderButton;
+	Viewport folderViewPort;
+	FolderManagerComponent folderManagerC;
 	TextButton searchButton;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)

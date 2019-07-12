@@ -240,6 +240,13 @@
 			path = ../../Source/JuceAudioFileOpener.h;
 			sourceTree = "SOURCE_ROOT";
 		};
+		3CCC550FAAC94997C3B49F36 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = FolderManagerComponent.h;
+			path = ../../Source/FolderManagerComponent.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		3D36E3090B87349BC80A7188 = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -538,6 +545,7 @@
 				2289CF45B5F68CEC78EDEE38,
 				A1601F63D17C72B93F880F97,
 				59698F0DF2B712B8882856B5,
+				3CCC550FAAC94997C3B49F36,
 				34D767661489E8A36B9A82A6,
 				DCF561ADB6CD41D45D49DF7C,
 				B35C5FC4FD487E8E61B76D12,

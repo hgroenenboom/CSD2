@@ -3,7 +3,9 @@
 //==============================================================================
 MainComponent::MainComponent()
 	: af(true, true)
-	, similarityChecker(&audioAnalyser)
+	, similarityChecker(&audioAnalyser),
+	folderManagerC(folderManager),
+	folderViewPort()
 {
 	similarAfs = new PlayableAudioFile[numSimilarFiles];
 
@@ -18,20 +20,23 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
 	
-	openFolderButton.setButtonText("open folder");
-	addAndMakeVisible(&openFolderButton);
-	openFolderButton.onClick = [&]() {
-		FileChooser chooser("Select folder to analyse", File());                                        // [7]
-		if (chooser.browseForDirectory())                                    // [8]
-		{
-			File file(chooser.getResult());                                  // [9]
-			folderManager.addFolder(0, file.getFullPathName().toStdString());
+	//openFolderButton.setButtonText("open folder");
+	//addAndMakeVisible(&openFolderButton);
+	//openFolderButton.onClick = [&]() {
+	//	FileChooser chooser("Select folder to analyse", File());                                        // [7]
+	//	if (chooser.browseForDirectory())                                    // [8]
+	//	{
+	//		File file(chooser.getResult());                                  // [9]
+	//		folderManager.addFolder(0, file.getFullPathName().toStdString());
 
-			setEnabled(false);
-			folderManager.analyseFolders();
-			setEnabled(true);
-		}
-	};
+	//		setEnabled(false);
+	//		folderManager.analyseFolders();
+	//		setEnabled(true);
+	//	}
+	//};
+	//addAndMakeVisible(&folderManagerC);
+	addAndMakeVisible(&folderViewPort);
+	folderViewPort.setViewedComponent(&folderManagerC);
 
 	for (int i = 0; i < numSimilarFiles; i++) {
 		addAndMakeVisible(&similarAfs[i]);
@@ -88,7 +93,8 @@ void MainComponent::resized()
 	auto right = getLocalBounds();
 	auto left = right.removeFromLeft( 0.5f*getWidth() );
 	auto topLeft = left.removeFromTop(0.2f * getHeight());
-	openFolderButton.setBounds(topLeft);
+	//openFolderButton.setBounds(topLeft);
+	folderViewPort.setBounds(topLeft);
 
 	af.setBounds(left.removeFromTop(0.2f * getHeight()));
 	similarityChecker.setBounds(left.removeFromTop(0.5f * getHeight()));

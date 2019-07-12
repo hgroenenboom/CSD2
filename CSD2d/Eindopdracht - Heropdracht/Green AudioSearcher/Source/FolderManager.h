@@ -19,6 +19,17 @@ class Folder {
 public:
 	std::string path = "";
 	bool enabled = true;
+
+	void openFolder() {
+		FileChooser chooser("Select folder to analyse", File());                                       
+		if (chooser.browseForDirectory())                                    // [8]
+		{
+			File file(chooser.getResult());                                  // [9]
+			path = file.getFullPathName().toStdString();
+			//folderManager.analyseFolders();
+			//setEnabled(true);
+		}
+	}
 };
 
 /****************************************************************/
@@ -26,8 +37,8 @@ public:
 
 class FolderManager {
 public:
-	FolderManager()
-		: folders(10)
+	FolderManager(int numFolders = 10)
+		: folders(numFolders)
 	{
 	}
 
@@ -92,6 +103,14 @@ public:
 
 	const std::vector<AFFeatureSet>& getFeatureSets() {
 		return featureSets;
+	}
+
+	void openFolder(int slot) {
+		folders[slot].openFolder();
+	}
+
+	String getFolderPath(int slot) {
+		return folders[slot].path;
 	}
 private:
 	std::vector<Folder> folders;

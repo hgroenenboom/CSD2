@@ -12,6 +12,8 @@
     <FILE id="PRexHt" name="AudioAnalyzer.h" compile="0" resource="0" file="Source/AudioAnalyzer.h"/>
     <FILE id="vNbf34" name="AudioFile.h" compile="0" resource="0" file="Source/AudioFile.h"/>
     <FILE id="QBYnCq" name="FolderManager.h" compile="0" resource="0" file="Source/FolderManager.h"/>
+    <FILE id="c6y2kt" name="FolderManagerComponent.h" compile="0" resource="0"
+          file="Source/FolderManagerComponent.h"/>
     <FILE id="b1zAa4" name="JuceAudioFileOpener.h" compile="0" resource="0"
           file="Source/JuceAudioFileOpener.h"/>
     <FILE id="rPcJXn" name="JuceFFTWrapper.h" compile="0" resource="0"
