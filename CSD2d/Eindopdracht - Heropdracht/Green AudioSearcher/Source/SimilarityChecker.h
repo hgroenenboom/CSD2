@@ -12,6 +12,7 @@
 #include "AFFeatureSet.h"
 #include <limits>
 #include "LabelSlider.h"
+#include "AudioAnalyzer.h"
 
 class SimilarityChecker : public Component {
 public:

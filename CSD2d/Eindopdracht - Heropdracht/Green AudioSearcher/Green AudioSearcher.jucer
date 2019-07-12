@@ -9,18 +9,30 @@
       <FILE id="dqfuIs" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
     <FILE id="o0iRu0" name="AFFeatureSet.h" compile="0" resource="0" file="Source/AFFeatureSet.h"/>
+    <FILE id="R3LRCK" name="AudioAnalyzer.cpp" compile="1" resource="0"
+          file="Source/AudioAnalyzer.cpp"/>
     <FILE id="PRexHt" name="AudioAnalyzer.h" compile="0" resource="0" file="Source/AudioAnalyzer.h"/>
+    <FILE id="C6QDym" name="AudioFile.cpp" compile="1" resource="0" file="Source/AudioFile.cpp"/>
     <FILE id="vNbf34" name="AudioFile.h" compile="0" resource="0" file="Source/AudioFile.h"/>
+    <FILE id="MdvBt5" name="Colours.h" compile="0" resource="0" file="Source/Colours.h"/>
+    <FILE id="uWpOyH" name="FolderManager.cpp" compile="1" resource="0"
+          file="Source/FolderManager.cpp"/>
     <FILE id="QBYnCq" name="FolderManager.h" compile="0" resource="0" file="Source/FolderManager.h"/>
     <FILE id="c6y2kt" name="FolderManagerComponent.h" compile="0" resource="0"
           file="Source/FolderManagerComponent.h"/>
+    <FILE id="grBEG7" name="JuceAudioFileOpener.cpp" compile="1" resource="0"
+          file="Source/JuceAudioFileOpener.cpp"/>
     <FILE id="b1zAa4" name="JuceAudioFileOpener.h" compile="0" resource="0"
           file="Source/JuceAudioFileOpener.h"/>
+    <FILE id="Ckr769" name="JuceFFTWrapper.cpp" compile="1" resource="0"
+          file="Source/JuceFFTWrapper.cpp"/>
     <FILE id="rPcJXn" name="JuceFFTWrapper.h" compile="0" resource="0"
           file="Source/JuceFFTWrapper.h"/>
     <FILE id="UAu0Oo" name="LabelSlider.h" compile="0" resource="0" file="Source/LabelSlider.h"/>
     <FILE id="DxlLgv" name="LoadableAudioFile.h" compile="0" resource="0"
           file="Source/LoadableAudioFile.h"/>
+    <FILE id="gP14R4" name="PlayableAudiofile.cpp" compile="1" resource="0"
+          file="Source/PlayableAudiofile.cpp"/>
     <FILE id="CH4P7K" name="PlayableAudiofile.h" compile="0" resource="0"
           file="Source/PlayableAudiofile.h"/>
     <FILE id="FOozN6" name="SimilarityChecker.h" compile="0" resource="0"

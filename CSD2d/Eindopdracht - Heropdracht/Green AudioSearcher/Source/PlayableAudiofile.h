@@ -2,96 +2,25 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "LoadableAudioFile.h"
+#include "Colours.h"
 
 class PlayableAudioFile : public Component, public LoadableAudioFile, public FileDragAndDropTarget {
 public:
-	PlayableAudioFile(bool enableInwardDrag = false, bool enableOutwardDrag = true)
-		: inwardDragEnabled(enableInwardDrag)
-		, outwardDragEnabled(enableOutwardDrag)
-	{
-		addAndMakeVisible(&playButton);
-		playButton.setButtonText("play audiofile");
-		playButton.onClick = [&] { playStopButtonClicked(); };
+	PlayableAudioFile(bool enableInwardDrag = false, bool enableOutwardDrag = true);
 
-		addAndMakeVisible(&openButton);
-		openButton.setButtonText("open new audiofile");
-		openButton.onClick = [&] { openButtonClicked(); };
+	// Component methods
+	void paint(Graphics&) override;
+	void resized() override;
 
-		fileLoadedCallback = [&]() {
-			textField.setText( fullPath );
-		};
-		addAndMakeVisible(&textField);
-	}
+	void openButtonClicked();
+	void openFile(File file);
 
-	void paint(Graphics&) override {
-		if (fileDraggedOver) {
-			openButton.setColour(TextButton::ColourIds::buttonColourId, Colours::aquamarine);
-		}
-		else {
-			openButton.setColour(TextButton::ColourIds::buttonColourId, Colours::black);
-		}
-	}
+	// UNUSED
+	void releaseResources();
+	void prepareToPlay(int samplesPerBlock, int samplerate);
 
-	void resized() override {
-		auto s = getLocalBounds();
-		s.reduce(2, 2);
-		auto s_b = s.removeFromBottom( 30 );
-
-		playButton.setBounds( s.removeFromLeft( (int)( 0.5f * s.getWidth() ) ) );
-		openButton.setBounds( s );
-		textField.setBounds(s_b);
-	}
-
-	void openButtonClicked() {
-		FileChooser chooser("Select a Wave file to play...", File());                                        // [7]
-
-		if (chooser.browseForFileToOpen())                                    // [8]
-		{
-			File file(chooser.getResult());                                  // [9]
-			openFile(file);
-		}
-	}
-
-	void openFile(File file) {
-		open(file.getFullPathName().toStdString());
-		read();
-		position = 0.0f;
-	}
-
-	void releaseResources() {
-	}
-
-	void prepareToPlay(int samplesPerBlock, int samplerate) {
-	}
-
-	void getAudioBlock(AudioBuffer<float> buffer, int bufSize) {
-		if (isPlaying && fileLoaded) {
-			float** f = buffer.getArrayOfWritePointers();
-			const float startPosition = position;
-			const float speed = 1.0f; // should calculate via samplerate
-
-			for (int c = 0; c < numChannels; c++) {
-				position = startPosition;
-				for (int i = 0; i < bufSize; i++) {
-					const float w = position - floor(position);
-					const int pos1 = floor(position);
-					const int pos2 = ceil(position);
-
-					f[c][i] += (1.0f - w) * audio[c][pos1] + w * audio[c][pos2];
-
-					position += speed;
-					if (position > numSamples) {
-						position -= numSamples;
-					}
-				}
-			}
-		}
-	}
-
-	void playStop() {
-		position = 0.0f;
-		isPlaying = !isPlaying;
-	}
+	void getAudioBlock(AudioBuffer<float> buffer, int bufSize);
+	void playStop();
 private:
 	TextButton playButton;
 	TextButton openButton;
@@ -102,45 +31,17 @@ private:
 	bool inwardDragEnabled = false;
 	bool outwardDragEnabled = false;
 
-	void playStopButtonClicked() {
-		playStop();
-		if (isPlaying) {
-			playButton.setButtonText("stop audiofile");
-		}
-		else {
-			playButton.setButtonText("play audiofile");
-		}
-	}
+	Green_AudioSearcher::Kleur kleuren;
 
-	virtual void loadingAudiofile() override
-	{
-		this->setEnabled(false);
-	}
-	
-	virtual void audiofileLoaded() override 
-	{
-		this->setEnabled(true);
-	}
+	void playStopButtonClicked();
 
+	virtual void loadingAudiofile() override;
+	virtual void audiofileLoaded() override;
+
+	// Highlighting droppable audiofiles.
 	bool fileDraggedOver = false;
-	bool isInterestedInFileDrag(const StringArray &files) override {
-		return inwardDragEnabled;
-	}
-	void fileDragEnter(const StringArray &files, int x, int y) override {
-		if (files[0].endsWith(".wav")) {
-			fileDraggedOver = true;
-			repaint();
-		}
-	}
-	void fileDragExit(const StringArray &files) override {
-		fileDraggedOver = false;
-		repaint();
-	}
-	void filesDropped(const StringArray &files, int x, int y) override {
-		if (files[0].endsWith(".wav")) {
-			openFile(files[0]);
-			fileDraggedOver = false;
-			repaint();
-		}
-	}
+	bool isInterestedInFileDrag(const StringArray &files) override;
+	void fileDragEnter(const StringArray &files, int x, int y) override;
+	void fileDragExit(const StringArray &files) override;
+	void filesDropped(const StringArray &files, int x, int y) override;
 };

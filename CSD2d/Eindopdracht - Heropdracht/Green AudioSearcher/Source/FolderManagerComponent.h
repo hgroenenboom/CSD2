@@ -85,6 +85,7 @@ public:
 			}
 			if (b == openButtons[i]) {
 				folderManager.openFolder(i);
+				toggles[i].setToggleState(true, NotificationType::sendNotification);
 				folderPaths[i].setText(folderManager.getFolderPath(i));
 			}
 		}

@@ -7,8 +7,6 @@ MainComponent::MainComponent()
 	folderManagerC(folderManager),
 	folderViewPort()
 {
-	similarAfs = new PlayableAudioFile[numSimilarFiles];
-
     if (RuntimePermissions::isRequired (RuntimePermissions::recordAudio)
         && ! RuntimePermissions::isGranted (RuntimePermissions::recordAudio))
     {
@@ -20,6 +18,8 @@ MainComponent::MainComponent()
         setAudioChannels (2, 2);
     }
 	
+	similarAfs = new PlayableAudioFile[numSimilarFiles];
+	
 	audioAnalyser.fileAnalysed = [&]() {
 		numFiles = audioAnalyser.getFeatureSets().size();
 	};
@@ -28,7 +28,7 @@ MainComponent::MainComponent()
 	};
 
 	analyseFoldersButton.setButtonText("analyse folders");
-	analyseFoldersButton.setColour(TextButton::buttonColourId, Colours::lightgreen.darker(0.6f));
+	analyseFoldersButton.setColour(TextButton::buttonColourId, kleuren.greenColour);
 	addAndMakeVisible(&analyseFoldersButton);
 	analyseFoldersButton.onClick = [&]() {
 		analyseFoldersButton.setButtonText("analysing folders...");
@@ -36,7 +36,7 @@ MainComponent::MainComponent()
 		analyseFoldersButton.setEnabled(false);
 		auto files = folderManager.findAudioFilesInFolders();
 		analyseFoldersButton.setButtonText("analysing files: " + std::to_string(files.size()));
-		audioAnalyser.analyseAudioFiles(files);
+		audioAnalyser.analyseAudioFilesAsynchrous(files);
 	};
 	addAndMakeVisible(&analysisFilesText);
 
@@ -53,11 +53,12 @@ MainComponent::MainComponent()
 		searchSimilarAudio();
 	};
 	searchButton.setButtonText("search");
+	searchButton.setColour(TextButton::buttonColourId, kleuren.greenColour);
 
 	addAndMakeVisible(&similarityChecker);
 
-	setSize(800, 600);
 	startTimerHz(30);
+	setSize(800, 600);
 }
 
 MainComponent::~MainComponent()
@@ -141,6 +142,7 @@ void MainComponent::timerCallback() {
 }
 
 void MainComponent::searchSimilarAudio() {
+	searchButton.setEnabled(false);
 	if (af.fullPath != "") {
 		auto sets = audioAnalyser.getFeatureSets();
 
@@ -157,4 +159,5 @@ void MainComponent::searchSimilarAudio() {
 			}
 		}
 	}
+	searchButton.setEnabled(true);
 }

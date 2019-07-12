@@ -7,6 +7,7 @@
 #include "AFFeatureSet.h"
 #include "SimilarityChecker.h"
 #include "AudioAnalyzer.h"
+#include "Colours.h"
 
 //==============================================================================
 /*
@@ -38,13 +39,13 @@ private:
 	PlayableAudioFile af;
 	const int numSimilarFiles = 10;
 	PlayableAudioFile* similarAfs;
-	FolderManager folderManager;
 	SimilarityChecker similarityChecker;
 
 	TextButton analyseFoldersButton;
 	DrawableText analysisFilesText;
 
 	Viewport folderViewPort;
+	FolderManager folderManager;
 	FolderManagerComponent folderManagerC;
 	TextButton searchButton;
 	
@@ -54,6 +55,8 @@ private:
 	int numFilesAnalysed = 0;
 	int numFilesToAnalyse = 0;
 	bool isAnalysing = false;
+
+	Green_AudioSearcher::Kleur kleuren;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

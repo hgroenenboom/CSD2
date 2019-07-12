@@ -65,6 +65,30 @@
 			isa = PBXBuildFile;
 			fileRef = 602DA86BC523EFD12D8A3FBD;
 		};
+		3CFCA1123FFF9D25DA4E4958 = {
+			isa = PBXBuildFile;
+			fileRef = 0F402437590DC62FBA49C0CF;
+		};
+		2D791F85741350AE0EFC716F = {
+			isa = PBXBuildFile;
+			fileRef = 328CE5B7F45DEE311D96FA65;
+		};
+		2B38F73811C2C22C7E07978B = {
+			isa = PBXBuildFile;
+			fileRef = D163BD8DD298B5A3CE7137B8;
+		};
+		2FB6BD44DB703C5A243CCF4C = {
+			isa = PBXBuildFile;
+			fileRef = 189E5326F97CEE5C628998E1;
+		};
+		CB78A45A12ABA5EE7D642033 = {
+			isa = PBXBuildFile;
+			fileRef = 60BE2147ABCFA063816CD547;
+		};
+		408CE758C0660F2C94CFB6C7 = {
+			isa = PBXBuildFile;
+			fileRef = 7D639329FC82B49E1FBC5220;
+		};
 		BB20C021E20EFEBC57BA13EB = {
 			isa = PBXBuildFile;
 			fileRef = 21947D979FB3DBD4E63241EC;
@@ -135,6 +159,13 @@
 			path = System/Library/Frameworks/QuartzCore.framework;
 			sourceTree = SDKROOT;
 		};
+		0F402437590DC62FBA49C0CF = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = AudioAnalyzer.cpp;
+			path = ../../Source/AudioAnalyzer.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		0FE5CFB764ED9A51147BB281 = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.xml;
@@ -176,6 +207,13 @@
 			name = AudioToolbox.framework;
 			path = System/Library/Frameworks/AudioToolbox.framework;
 			sourceTree = SDKROOT;
+		};
+		189E5326F97CEE5C628998E1 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = JuceAudioFileOpener.cpp;
+			path = ../../Source/JuceAudioFileOpener.cpp;
+			sourceTree = "SOURCE_ROOT";
 		};
 		201ACEF7108D1180C9A05F3F = {
 			isa = PBXFileReference;
@@ -232,6 +270,13 @@
 			name = "juce_core";
 			path = "~/JUCE/modules/juce_core";
 			sourceTree = "<absolute>";
+		};
+		328CE5B7F45DEE311D96FA65 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = AudioFile.cpp;
+			path = ../../Source/AudioFile.cpp;
+			sourceTree = "SOURCE_ROOT";
 		};
 		34D767661489E8A36B9A82A6 = {
 			isa = PBXFileReference;
@@ -338,6 +383,20 @@
 			path = ../../JuceLibraryCode/AppConfig.h;
 			sourceTree = "SOURCE_ROOT";
 		};
+		60BE2147ABCFA063816CD547 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = JuceFFTWrapper.cpp;
+			path = ../../Source/JuceFFTWrapper.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
+		6CE183B1DBA3B971805AC241 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = Colours.h;
+			path = ../../Source/Colours.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		6DC60C78144526E4FEA27D14 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -351,6 +410,13 @@
 			name = "juce_audio_devices";
 			path = "~/JUCE/modules/juce_audio_devices";
 			sourceTree = "<absolute>";
+		};
+		7D639329FC82B49E1FBC5220 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = PlayableAudiofile.cpp;
+			path = ../../Source/PlayableAudiofile.cpp;
+			sourceTree = "SOURCE_ROOT";
 		};
 		841CE4CB580922DE93FDA030 = {
 			isa = PBXFileReference;
@@ -478,6 +544,13 @@
 			path = "../../JuceLibraryCode/include_juce_gui_basics.mm";
 			sourceTree = "SOURCE_ROOT";
 		};
+		D163BD8DD298B5A3CE7137B8 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = FolderManager.cpp;
+			path = ../../Source/FolderManager.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		DCF561ADB6CD41D45D49DF7C = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
@@ -542,14 +615,21 @@
 			children = (
 				2729DD55A62CA2914F8D8DAE,
 				1364DF8756F828959E397B87,
+				0F402437590DC62FBA49C0CF,
 				2289CF45B5F68CEC78EDEE38,
+				328CE5B7F45DEE311D96FA65,
 				A1601F63D17C72B93F880F97,
+				6CE183B1DBA3B971805AC241,
+				D163BD8DD298B5A3CE7137B8,
 				59698F0DF2B712B8882856B5,
 				3CCC550FAAC94997C3B49F36,
+				189E5326F97CEE5C628998E1,
 				34D767661489E8A36B9A82A6,
+				60BE2147ABCFA063816CD547,
 				DCF561ADB6CD41D45D49DF7C,
 				B35C5FC4FD487E8E61B76D12,
 				B5A5B93EB337CCF13D991E3E,
+				7D639329FC82B49E1FBC5220,
 				576B7BBF88A08815BB2B2972,
 				2221859C5FEC33E0C8B47C75,
 			);
@@ -860,6 +940,12 @@
 			files = (
 				A9CA85355C2C6FA26C0964E7,
 				4ADB84A6C2CDB278D01C594C,
+				3CFCA1123FFF9D25DA4E4958,
+				2D791F85741350AE0EFC716F,
+				2B38F73811C2C22C7E07978B,
+				2FB6BD44DB703C5A243CCF4C,
+				CB78A45A12ABA5EE7D642033,
+				408CE758C0660F2C94CFB6C7,
 				BB20C021E20EFEBC57BA13EB,
 				4C9CDA3B931D3B8C4EF06326,
 				9F3068007E7B916C91EB94A0,

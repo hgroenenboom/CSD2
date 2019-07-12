@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "AudioAnalyzer.h"
 
 // simple folder class
 class Folder {
@@ -20,16 +19,7 @@ public:
 	std::string path = "";
 	bool enabled = false;
 
-	void openFolder() {
-		FileChooser chooser("Select folder to analyse", File());                                       
-		if (chooser.browseForDirectory())                                    // [8]
-		{
-			File file(chooser.getResult());                                  // [9]
-			path = file.getFullPathName().toStdString();
-			//folderManager.analyseFolders();
-			//setEnabled(true);
-		}
-	}
+	void openFolder();
 };
 
 /****************************************************************/
@@ -37,94 +27,30 @@ public:
 
 class FolderManager {
 public:
-	FolderManager(int numFolders = 10)
-		: folders(numFolders)
-	{
-	}
+	FolderManager(int numFolders = 10);
 
 	// add folder to Folder vector
-	void addFolder(int slot, std::string path) {
-		folders[slot].path = path;
-	}
-	void addFolder(std::string path) {
-		bool foundEmpty = false;
-		for (int i = 0; i < folders.size(); i++) {
-			if (!foundEmpty && folders[i].path == "") {
-				foundEmpty = true;
-				folders[i].path = path;
-			}
-		}
-	}
+	void addFolder(int slot, std::string path);
+	void addFolder(std::string path);
 
-	void removeFolder(int slot) {
-		folders[slot].path = "";
-	}
+	void removeFolder(int slot);
 
 	// disable or enable a folder for analysis
-	void toggleFolder(int slot, bool state) {
-		folders[slot].enabled = state;
-	}
+	void toggleFolder(int slot, bool state);
 
-	std::vector<std::string> findAudioFilesInFolders() {
-		// check which folders should be analyzed
-		std::vector<Folder> foldersToAnalyse;
-		for (int i = 0; i < folders.size(); i++) {
-			if (folders[i].enabled == true && folders[i].path != "") {
-				foldersToAnalyse.push_back(folders[i]);
-			}
-		}
+	void openFolder(int slot);
 
-		// find all files which should be analyzed
-		std::vector<std::string> filesToAnalyse;
-		for (Folder& f : foldersToAnalyse) {
-			// find all wave files
-			DirectoryIterator d_iter( File(f.path), true, "*.wav");
-			while (d_iter.next())
-			{
-				std::string newFile = d_iter.getFile().getFullPathName().toStdString();
+	String getFolderPath(int slot);
 
-				// dont add duplicates
-				if (!findInVector<std::string>(filesToAnalyse, newFile).first) {
-					filesToAnalyse.push_back(newFile);
-				};
-			}
-		}
-
-		return filesToAnalyse;
-	}
-
-	void openFolder(int slot) {
-		folders[slot].openFolder();
-	}
-
-	String getFolderPath(int slot) {
-		return folders[slot].path;
-	}
+	// get a vector of paths of all audiofiles in the selected folders
+	std::vector<std::string> findAudioFilesInFolders();
 private:
 	std::vector<Folder> folders;
 
 	// Helper function for easily finding elements inside vectors.
+	// returns whether an element is found, and if it's found, on which index in the vector.
 	template < typename T>
-	std::pair<bool, int > findInVector(const std::vector<T>  & vecOfElements, const T  & element)
-	{
-		std::pair<bool, int > result;
-
-		// Find given element in vector
-		auto it = std::find(vecOfElements.begin(), vecOfElements.end(), element);
-
-		if (it != vecOfElements.end())
-		{
-			result.second = distance(vecOfElements.begin(), it);
-			result.first = true;
-		}
-		else
-		{
-			result.first = false;
-			result.second = -1;
-		}
-
-		return result;
-	}
+	std::pair<bool, int > findInVector(const std::vector<T>  & vecOfElements, const T  & element);
 
 };
 
