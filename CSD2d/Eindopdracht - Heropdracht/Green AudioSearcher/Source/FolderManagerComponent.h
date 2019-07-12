@@ -71,7 +71,8 @@ public:
 	void buttonClicked(Button* b) override {
 		for (int i = 0; i < size; i++) {
 			if (b == &toggles[i]) {
-				folderManager.toggleFolder(i, toggles[i].isDown());
+				const bool buttonState = toggles[i].getToggleState();
+				folderManager.toggleFolder(i, buttonState);
 			}
 			if (b == openButtons[i]) {
 				folderManager.openFolder(i);

@@ -40,7 +40,9 @@ private:
 	FolderManager folderManager;
 	SimilarityChecker similarityChecker;
 
-	//TextButton openFolderButton;
+	TextButton analyseFoldersButton;
+	DrawableText analysisFilesText;
+
 	Viewport folderViewPort;
 	FolderManagerComponent folderManagerC;
 	TextButton searchButton;

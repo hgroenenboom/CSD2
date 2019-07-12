@@ -18,7 +18,7 @@
 class Folder {
 public:
 	std::string path = "";
-	bool enabled = true;
+	bool enabled = false;
 
 	void openFolder() {
 		FileChooser chooser("Select folder to analyse", File());                                       
@@ -65,11 +65,11 @@ public:
 		folders[slot].enabled = state;
 	}
 
-	void analyseFolders() {
+	std::vector<std::string> findAudioFilesInFolders() {
 		// check which folders should be analyzed
 		std::vector<Folder> foldersToAnalyse;
 		for (int i = 0; i < folders.size(); i++) {
-			if (folders[i].enabled = true && folders[i].path != "") {
+			if (folders[i].enabled == true && folders[i].path != "") {
 				foldersToAnalyse.push_back(folders[i]);
 			}
 		}
@@ -90,19 +90,7 @@ public:
 			}
 		}
 
-		// analyse all found audiofiles and add to featuresSets
-		featureSets.clear();
-		for (std::string& f : filesToAnalyse) {
-			bool succes = false;
-			AFFeatureSet set = audioAnalyzer.analyseAudio(f, &succes);
-			if (succes) {
-				featureSets.push_back(set);
-			}
-		}
-	}
-
-	const std::vector<AFFeatureSet>& getFeatureSets() {
-		return featureSets;
+		return filesToAnalyse;
 	}
 
 	void openFolder(int slot) {
@@ -114,8 +102,6 @@ public:
 	}
 private:
 	std::vector<Folder> folders;
-	std::vector<AFFeatureSet> featureSets;
-	AudioAnalyzer audioAnalyzer;
 
 	// Helper function for easily finding elements inside vectors.
 	template < typename T>

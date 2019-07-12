@@ -31,46 +31,75 @@ public:
 		}
 	}
 
+	std::vector<AFFeatureSet>& getFeatureSets() {
+		return featureSets;
+	}
+
+	void analyseAudioFiles(std::vector<std::string> files) {
+		for (std::string f : files) {
+			bool succes = false;
+			AFFeatureSet set = analyseAudio(f, &succes);
+			if (succes) {
+				featureSets.push_back(set);
+			}
+		}
+	}
+
 	// stores whether analysis succeeds in the succes parameter
-	AFFeatureSet analyseAudio( std::string inputAudioFile, bool* succes) {
+	AFFeatureSet analyseAudio(std::string inputAudioFile, bool* succes) {
 		// init
-		*succes = false; 
-		af.open(inputAudioFile);
+		*succes = false;
+		if ( af.open(inputAudioFile) ) {
+			// check whether input file is elegible
+			if (af.numChannels > maxChannels || af.numSamples > maxSamples || af.fileLoaded == false) {
+				return AFFeatureSet();
+			}
+			else {
+				// get audio data and perform fft analysis
+				getAudio();
+				fft.processAF(&af);
 
-		// check whether input file is elegible
-		if (af.numChannels > maxChannels || af.numSamples > maxSamples || af.fileLoaded == false) {
-			return AFFeatureSet();
+				// store analysis values inside feature vector
+				f[getParamIndex("mean")] = getMean();
+				f[getParamIndex("length")] = 1.0f / (1.0f + 0.2f*(af.numSamples / af.sampleRate));
+				const float lowLimit = 500.0f / af.sampleRate;
+				const float midLimit = 2500.0f / af.sampleRate;
+				f[getParamIndex("low")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(0, lowLimit));
+				f[getParamIndex("mid")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(lowLimit, midLimit));
+				f[getParamIndex("high")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(midLimit, 1.0f));
+
+				// create new feature set
+				AFFeatureSet newSet(af.fullPath, IDENTIFIER, p, f);
+				*succes = true;
+				return newSet;
+			}
 		}
-		else {
-			// get audio data and perform fft analysis
-			getAudio();
-			fft.processAF(&af);
-
-			// store analysis values inside feature vector
-			f[getParamIndex("mean")] = getMean();
-			f[getParamIndex("length")] = 1.0f / (1.0f+ 0.2f*(af.numSamples / af.sampleRate));
-			const float lowLimit = 500.0f / af.sampleRate;
-			const float midLimit = 2500.0f / af.sampleRate;
-			f[getParamIndex("low")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(0, lowLimit));
-			f[getParamIndex("mid")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(lowLimit, midLimit));
-			f[getParamIndex("high")] = std::tanh(fft.getMagnitudeForPartOfSpectrum(midLimit, 1.0f));
-
-			// create new feature set
-			AFFeatureSet newSet(af.fullPath, IDENTIFIER, p, f);
-			*succes = true;
-			return newSet;
+	}
+private:
+	std::vector<AFFeatureSet> featureSets;
+	bool featureSetNotYetLoaded(std::string& file) {
+		for (auto set : featureSets) {
+			if (set.filePath == file && set.versionID == IDENTIFIER) {
+				return false;
+			}
 		}
+
+		return true;
 	}
 
 	// audiorelated variables
 	const static int maxChannels = 2;
 	const static int maxSamples = 44100 * 60 * 4;
 	float audio[2][maxSamples];
-private:
+
 	LoadableAudioFile af;
 	FFTWrapper fft;
 	std::vector<float> f;
 	std::vector<std::string> p;
+
+	/********************************************/
+	/*******************AUDIO********************/
+	/********************************************/
 
 	// get audio from selected audiofile
 	void getAudio() {

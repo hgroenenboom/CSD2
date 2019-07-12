@@ -23,7 +23,7 @@ public:
 	}
 
 	// open new audiofile
-	void open(std::string filePath)
+	bool open(std::string filePath)
 	{
 		// init
 		loadingAudiofile();
@@ -32,13 +32,16 @@ public:
 			deleteAudio();
 
 		// open file
-		audioFileOpener.open(this, File(filePath) );
+		if ( audioFileOpener.open(*this, File(filePath)) ) {
+			// finish
+			fileLoaded = true;
+			audiofileLoaded();
+			if (fileLoadedCallback != nullptr)
+				fileLoadedCallback();
+			return true;
+		}
 
-		// finish
-		fileLoaded = true;
-		audiofileLoaded();
-		if (fileLoadedCallback != nullptr)
-			fileLoadedCallback();
+		return false;
 	}
 
 
