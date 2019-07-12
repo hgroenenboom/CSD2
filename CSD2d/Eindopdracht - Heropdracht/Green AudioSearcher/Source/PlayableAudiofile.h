@@ -54,6 +54,7 @@ public:
 
 	void openFile(File file) {
 		open(file.getFullPathName().toStdString());
+		read();
 		position = 0.0f;
 	}
 

@@ -33,7 +33,7 @@ public:
 		reader = formatManager.createReaderFor(f); // [10]
 
 		// load audiofile attributes
-		jassert(reader != nullptr);
+		//jassert(reader != nullptr);
 		if (reader != nullptr)
 		{
 			jassert(reader->numChannels > 0);
@@ -44,14 +44,11 @@ public:
 			af.fullPath = file.getFullPathName().toStdString();
 			af.sampleRate = reader->sampleRate;
 
-			// read audiofile data
-			read(af);
-
 			return true;
 		}
 		return false;
 	}
-private:
+
 	void read(AudioFile& af)
 	{
 		af.fileLoaded = false;
@@ -60,7 +57,7 @@ private:
 		af.stripSilence();
 		af.fileLoaded = true;
 	}
-
+private:
 	// JUCE functionality
 	File file;
 	AudioFormatReader* reader = nullptr;

@@ -14,6 +14,9 @@
 #include <string>
 #include "JuceFFTWrapper.h"
 #include "../JuceLibraryCode/JuceHeader.h"
+#include <thread>
+#include <functional>
+#include <future>
 
 class AudioAnalyzer {
 public:
@@ -36,13 +39,8 @@ public:
 	}
 
 	void analyseAudioFiles(std::vector<std::string> files) {
-		for (std::string f : files) {
-			bool succes = false;
-			AFFeatureSet set = analyseAudio(f, &succes);
-			if (succes) {
-				featureSets.push_back(set);
-			}
-		}
+		//std::thread t(&AudioAnalyzer::analyseFiles, this, files);
+		analysisProgress = std::async(std::launch::async, &AudioAnalyzer::analyseFiles, this, files);
 	}
 
 	// stores whether analysis succeeds in the succes parameter
@@ -51,11 +49,12 @@ public:
 		*succes = false;
 		if ( af.open(inputAudioFile) ) {
 			// check whether input file is elegible
-			if (af.numChannels > maxChannels || af.numSamples > maxSamples || af.fileLoaded == false) {
+			if (af.numChannels > maxChannels || af.numSamples > maxSamples) {
 				return AFFeatureSet();
 			}
 			else {
 				// get audio data and perform fft analysis
+				af.read();
 				getAudio();
 				fft.processAF(&af);
 
@@ -75,6 +74,12 @@ public:
 			}
 		}
 	}
+
+	std::function<void()> filesAnalysed = nullptr;
+	std::function<void()> fileAnalysed = nullptr;
+	std::future<void> analysisProgress;
+	int filesToAnalyse = 0;
+	int numFilesAnalysed = 0;
 private:
 	std::vector<AFFeatureSet> featureSets;
 	bool featureSetNotYetLoaded(std::string& file) {
@@ -83,8 +88,28 @@ private:
 				return false;
 			}
 		}
-
 		return true;
+	}
+
+	void analyseFiles(std::vector<std::string> files) {
+		filesToAnalyse = files.size();
+		numFilesAnalysed = 0;
+		for (std::string f : files) {
+			if (featureSetNotYetLoaded(f)) {
+				bool succes = false;
+				AFFeatureSet set = analyseAudio(f, &succes);
+				if (succes) {
+					featureSets.push_back(set);
+					if (fileAnalysed != nullptr) {
+						fileAnalysed();
+					}
+				}
+			}
+			numFilesAnalysed++;
+		}
+		if (filesAnalysed != nullptr) {
+			filesAnalysed();
+		}
 	}
 
 	// audiorelated variables

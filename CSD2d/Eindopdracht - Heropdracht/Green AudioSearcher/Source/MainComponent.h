@@ -13,7 +13,7 @@
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent   : public AudioAppComponent
+class MainComponent   : public AudioAppComponent, public Timer
 {
 public:
     //==============================================================================
@@ -28,6 +28,7 @@ public:
     //==============================================================================
     void paint (Graphics& g) override;
     void resized() override;
+	void timerCallback() override;
 
 	void searchSimilarAudio();
 private:
@@ -46,6 +47,13 @@ private:
 	Viewport folderViewPort;
 	FolderManagerComponent folderManagerC;
 	TextButton searchButton;
+	
+	std::vector<Rectangle<int>> rectanglesToFill;
+
+	int numFiles = 0;
+	int numFilesAnalysed = 0;
+	int numFilesToAnalyse = 0;
+	bool isAnalysing = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

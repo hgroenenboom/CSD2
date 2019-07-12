@@ -34,17 +34,19 @@ public:
 		// open file
 		if ( audioFileOpener.open(*this, File(filePath)) ) {
 			// finish
-			fileLoaded = true;
-			audiofileLoaded();
-			if (fileLoadedCallback != nullptr)
-				fileLoadedCallback();
 			return true;
 		}
 
 		return false;
 	}
 
-
+	void read() {
+		audioFileOpener.read(*this);
+		fileLoaded = true;
+		audiofileLoaded();
+		if (fileLoadedCallback != nullptr)
+			fileLoadedCallback();
+	}
 private:
 	// used for opening an audiofile via the JUCE frameworks
 	JuceAudioFileOpener audioFileOpener;
